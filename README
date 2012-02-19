@@ -1,30 +1,41 @@
 Description
-	Once, I was playing with a number of Chinese tablets and trying different ROMs on them as they are technically the same hardware (HSG X5A variants).
+	Once, I was playing with a number of Chinese tablets and trying 
+	different ROMs on them as they are technically the same hardware 
+	HSG X5A variants).
 
-	I've had some problems getting the hard buttons to work though, so I wrote this application to detect key events and print them out.
+	I've had some problems getting the hard buttons to work though, so I 
+	wrote this application to detect key events and print them out.
 
-	The three checkboxes at the top control what information will be displayed.
+	The three checkboxes at the top control what information will be 
+	displayed.
 
-    KeyEvents: The KeyEvents as Android understands them (KeyUp, KeyDown, KeyLongPress, KeyMultiple).
-    LogCat: Any relevant messages in logcat. Its filtered based on keywords declared in arrays.xml
-    Kernel: Any relevant messages in the kernel log. Its filtered based on keywords declared in arrays.xml
+    KeyEvents: The KeyEvents as Android understands them (KeyUp, KeyDown, 
+				KeyLongPress, KeyMultiple).
+    LogCat: Any relevant messages in logcat. Its filtered based on 
+				keywords declared in arrays.xml
+    Kernel: Any relevant messages in the kernel log. Its filtered based on 
+			keywords declared in arrays.xml
 
 	(Kernel log parsing needs root)
 	
-	This is a personal debug tool, but I hope it will be of some use to someone else.
+	This is a personal debug tool, but I hope it will be of some use to 
+	someone else.
 
 	No Ads.
 	
 Notes
-    While the application is running, the only "hard" keys which should work is "Home" and power. All others will produce their keycodes.\n
+    While the application is running, the only "hard" keys which should 
+	work is "Home" and power. All others will produce their keycodes.
     
-    The SU request is to read the kernel log, so I can check if any keyevents are thrown by the kernel.
+    The SU request is to read the kernel log, so I can check if any 
+	keyevents are thrown by the kernel.
     
     The location of keylayout files in Android is "/system/usr/keylayout".
     
     Kernel log parsing needs root
     
-    Both logcat and kernel log monitoring will only display lines containing words from two arrays in arrays.xml
+    Both logcat and kernel log monitoring will only display lines 
+	containing words from two arrays in arrays.xml
     
 	Currently the filters are:
 		Logcat:
@@ -35,12 +46,6 @@ Notes
 			HwGPIOE->GPDA
 			keycode
 			keycharacter
-    
-    <string-array name="logcat_filter">
-        <item>HwGPIOE->GPDA</item>
-        <item>keycode</item>
-        <item>keycharacter</item>
-    </string-array>
 
 Changelog
 	·v0.0.1: First public release.
@@ -55,9 +60,12 @@ Acknowledgements
     All logos are the property of their respective owners
 
 Licence
-	Licensed under the Apache Licence 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
+	Apache Licence 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
 	
 Links
-	Market link	: https://market.android.com/details?id=aws.apps.keyeventdisplay
-	Webpage:	: http://aschillings.co.uk/html/keyevent_display.html
-	Github:		: https://github.com/alt236/KeyEvent-Display---Android
+	Market link	: 
+		https://market.android.com/details?id=aws.apps.keyeventdisplay
+	Webpage:	:
+		http://aschillings.co.uk/html/keyevent_display.html
+	Github:		: 
+		https://github.com/alt236/KeyEvent-Display---Android
