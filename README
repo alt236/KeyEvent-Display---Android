@@ -20,14 +20,33 @@ Notes
     
     The SU request is to read the kernel log, so I can check if any keyevents are thrown by the kernel.
     
+    The location of keylayout files in Android is "/system/usr/keylayout".
+    
     Kernel log parsing needs root
     
-    Both logcat and kernel log monitoring will only diplay lines containing words from two arrays in arrays.xml
+    Both logcat and kernel log monitoring will only display lines containing words from two arrays in arrays.xml
     
-    The location of keylayout files in Android is "/system/usr/keylayout".
+	Currently the filters are:
+		Logcat:
+			HwGPIOE->GPDA
+			keycode
+			keycharacter
+		Kernel:
+			HwGPIOE->GPDA
+			keycode
+			keycharacter
+    
+    <string-array name="logcat_filter">
+        <item>HwGPIOE->GPDA</item>
+        <item>keycode</item>
+        <item>keycharacter</item>
+    </string-array>
 
 Changelog
-
+	·v0.0.1: First public release.
+	·v0.0.2: Improved stability, added Exit button.
+	·v0.0.3: Code updates. 
+	
 Permission Explanation
     READ_LOGS: 				Used to access the Logcat log.
     WRITE_EXTERNAL_STORAGE: Used to write the exported data to the SD card.

@@ -10,15 +10,15 @@
 	
 	<string name="app_changelog">
 		Changelog:\n
-		·v0.0.1 First public release.
-		·v0.0.2 Improved stability, added Exit button.
+		·v0.0.1 First public release.\n
+		·v0.0.2 Improved stability, added Exit button.\n
+		·v0.0.3 Code updates. 
 	</string>
 
 	<string name="app_notes">
 		Notes:\n
 		·While the application is running, the only "hard" keys which should work is "Home" and power. All others will produce their keycodes.\n
 		·The SU request is to read the kernel log, so I can check if any keyevents are thrown by the kernel.\n
-		·Kernel monitoring is currently limited only to lines which contain the word "keycode" or "HwGPIOE->GPDA". Email me (aschillings.dev@gmail.com) if you need anything more.\n
 		·The location of keylayout files in Android is "/system/usr/keylayout".
 	</string>   
     <string name="ok">OK</string>
