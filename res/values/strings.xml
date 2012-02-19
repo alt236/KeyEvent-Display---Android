@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KeyEvent Display</string>
+	<string name="app_acknowledgements">
+		Acknowledgements:\n
+		·Original icon by OCAL: http://www.clker.com/clipart-1914.html
+	</string>
+	
+	<string name="app_copyright">Copyright A. Schillings, 2010</string>
+	
+	<string name="app_changelog">
+		Changelog:\n
+		·v0.0.1 First public release.
+		·v0.0.2 Improved stability, added Exit button.
+	</string>
+
+	<string name="app_notes">
+		Notes:\n
+		·While the application is running, the only "hard" keys which should work is "Home" and power. All others will produce their keycodes.\n
+		·The SU request is to read the kernel log, so I can check if any keyevents are thrown by the kernel.\n
+		·Kernel monitoring is currently limited only to lines which contain the word "keycode" or "HwGPIOE->GPDA". Email me (aschillings.dev@gmail.com) if you need anything more.\n
+		·The location of keylayout files in Android is "/system/usr/keylayout".
+	</string>   
+    <string name="ok">OK</string>
+
+
+	<string name="label_Show_Events">Events:</string> 
+	<string name="label_logcat">logcat</string> 
+	<string name="label_kernel">Kernel</string> 
+	<string name="label_keyevents">KeyEvents</string> 
+       
+    <string name="button_clear">Clear</string> 
+    <string name="button_export">To SD</string>
+	<string name="button_break">Add Break</string>    
+    <string name="pressbuttons">Press buttons to see the keycodes:\n</string>
+    <string name="label_menu_about">About</string>
+    <string name="break_string">-------------------------</string>
+    <string name="image_placeholder">Image Placeholder</string>
+</resources>

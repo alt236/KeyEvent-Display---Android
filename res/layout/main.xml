@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        style="@android:style/ButtonBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnClear"
+                style="@style/my_button_style"
+                android:text="@string/button_clear" />
+
+            <Button
+                android:id="@+id/btnExport"
+                style="@style/my_button_style"
+                android:text="@string/button_export" />
+
+            <Button
+                android:id="@+id/btnBreak"
+                style="@style/my_button_style"
+                android:text="@string/button_break" />
+
+            <ImageButton
+                android:id="@+id/btnAbout"
+                style="@style/my_button_style"
+                android:scaleType="centerInside"
+                android:src="@android:drawable/ic_menu_info_details" 
+                android:contentDescription="@string/image_placeholder"/>
+
+            <ImageButton
+                android:id="@+id/btnExit"
+                style="@style/my_button_style"
+                android:scaleType="centerInside"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:contentDescription="@string/image_placeholder" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_Show_Events"
+                android:textColor="@color/default_text_color" />
+
+            <CheckBox
+                android:id="@+id/chkKeyEvents"
+                style="@style/my_checkbox_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/label_keyevents" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"
+                android:layout_margin="5dp" />
+
+            <CheckBox
+                android:id="@+id/chkLogCat"
+                style="@style/my_checkbox_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_logcat" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"
+                android:layout_margin="5dp" />
+
+            <CheckBox
+                android:id="@+id/chkKernel"
+                style="@style/my_checkbox_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_kernel" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true" >
+
+        <TextView
+            android:id="@+id/fldEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@color/black"
+            android:scrollbars="vertical"
+            android:text="@string/pressbuttons"
+            android:textColor="@color/lime"
+            android:textSize="12dip"
+            android:typeface="monospace" />
+    </HorizontalScrollView>
+
+</LinearLayout>
