@@ -168,7 +168,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void onBtnClearClick(View target) {
-		fldLog.setText(R.string.pressbuttons);
+		fldLog.setText(R.string.greeting);
 		fldLog.scrollTo(0, 0);
 	}
 
@@ -178,9 +178,12 @@ public class MainActivity extends Activity {
 	}
 
 	public void onBtnSaveClick(View target) {
-		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.pressbuttons)))){
+		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.greeting)))){
 			String time = uB.formatDateTime("yyyy-MM-dd-HHmmssZ", new Date());
-			uB.saveToFile("keyevent_"+ time +".txt", Environment.getExternalStorageDirectory(), getExportText());
+			uB.saveToFile(
+					"keyevent_"+ time +".txt", 
+					Environment.getExternalStorageDirectory(), 
+					getExportText());
 		} else {
 			uB.showToast(getString(R.string.nothing_to_save), 
 					Toast.LENGTH_SHORT, Gravity.TOP,0,0);					
@@ -188,12 +191,12 @@ public class MainActivity extends Activity {
 	}
 
 	public void onBtnShareClick(View target) {
-		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.pressbuttons)))){
+		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.greeting)))){
 			String time = uB.formatDateTime("yyyy-MM-dd-HHmmssZ", new Date());
 
-			uB.share("keyevent_"+ time , getExportText());
-
-			uB.saveToFile("keyevent_"+ time, Environment.getExternalStorageDirectory(), fldLog.getText().toString());
+			uB.share(
+					"keyevent_"+ time , 
+					getExportText());
 		} else {
 			uB.showToast(getString(R.string.nothing_to_share), 
 					Toast.LENGTH_SHORT, Gravity.TOP,0,0);					
