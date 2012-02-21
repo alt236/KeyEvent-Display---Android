@@ -37,7 +37,7 @@ import aws.apps.keyeventdisplay.monitors.LogCatMonitor;
 import aws.apps.keyeventdisplay.util.UsefulBits;
 
 public class MainActivity extends Activity {
-	
+
 	final String TAG = this.getClass().getName();
 	private static final int MAX_TEXT_LINES = 1024;
 
@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 	private LogCatMonitor logCatM;
 	private UsefulBits uB;
 	private KernelLogMonitor kernelM;
-	
+
 	private final Handler kernelLogHandler = new Handler()
 	{
 		@Override
@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 			}
 		}
 	};	
-	
+
 	private final Handler logcatHandler = new Handler()
 	{
 		@Override
@@ -82,17 +82,17 @@ public class MainActivity extends Activity {
 	};
 
 
-	
+
 	public void addKernelLine(String text){
 		if (!chkKernel.isChecked()){return;}
 		displayLogLine("^ Kernel:       ", text, getResources().getColor(R.color.color_kernel));
 	}
-	
+
 	public void addLogCatLine(String text){
 		if (!chkLogcat.isChecked()){return;}
 		displayLogLine("^ Logcat:       ", text, getResources().getColor(R.color.color_logcat));
 	}
-	
+
 	private void displayKeyEvent(String title, KeyEvent event, int color) {
 		sanityCheck(fldLog);
 
@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
 		fldLog.append(Html.fromHtml(sb.toString()));
 		uB.autoScroll(fldLog);
 	}
-	
+
 	private void displayLogLine(String title, String event, int color){
 		StringBuilder sb = new StringBuilder();
 		sb.append("<font color=" + color + ">" + title.replace(" ", "&nbsp;"));
@@ -125,32 +125,57 @@ public class MainActivity extends Activity {
 		fldLog.append(Html.fromHtml(sb.toString()));
 		uB.autoScroll(fldLog);
 	}
-	
+
 	private String getExportText(){
 		StringBuffer sb = new StringBuffer();
-
+		sb.append("OS Release: " + android.os.Build.VERSION.RELEASE + "\n");
+		sb.append("OS API Level: " + android.os.Build.VERSION.SDK_INT + "\n"); 
+		sb.append("Board: " + android.os.Build.BOARD + "\n");                   
+		sb.append("Brand: " + android.os.Build.BRAND + "\n");                 
+		sb.append("CPU_ABI: " + android.os.Build.CPU_ABI + "\n");                    
+		sb.append("Device: " +  android.os.Build.DEVICE + "\n");              
+		sb.append("Display: " + android.os.Build.DISPLAY + "\n");             
+		sb.append("Fingerprint: " + android.os.Build.FINGERPRINT + "\n");           
+		sb.append("Host: " + android.os.Build.HOST + "\n");  
+		sb.append("ID: " + android.os.Build.ID + "\n");                       
+		sb.append("Manufacturer: " + android.os.Build.MANUFACTURER + "\n");   
+		sb.append("Model: " +  android.os.Build.MODEL + "\n");               
+		sb.append("Product: " + android.os.Build.PRODUCT + "\n");                      
+		sb.append("Tags: " + android.os.Build.TAGS + "\n");                  
+		sb.append("Type: " + android.os.Build.TYPE + "\n");                  
+		sb.append("User: " + android.os.Build.USER + "\n");                
+		
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.FROYO){
+			sb.append("Bootloader: " + android.os.Build.BOOTLOADER + "\n"); 
+			sb.append("CPU_ABI2: " +  android.os.Build.CPU_ABI2 + "\n");
+			sb.append("Hardware: " + android.os.Build.HARDWARE + "\n");  
+			sb.append("Radio: " + android.os.Build.RADIO + "\n");
+		}
+		
+		sb.append("\n\n-----------------\n\n");
+		
 		sb.append(fldLog.getText().toString());
-
+		
 		return sb.toString();
 	}
-	
+
 	public void onBtnAboutClick(View target) {
 		uB.showAboutDialogue();
-    }
-	
+	}
+
 	public void onBtnBreakClick(View target) {
 		fldLog.append(Html.fromHtml("<font color="+getResources().getColor(R.color.lime)+">" + getString(R.string.break_string)+"</font><br/>"));
-    }
+	}
 
 	public void onBtnClearClick(View target) {
 		fldLog.setText(R.string.pressbuttons);
 		fldLog.scrollTo(0, 0);
-    }
+	}
 
 	public void onBtnExitClick(View target) {
 		onStop();
 		System.exit(0);
-    }
+	}
 
 	public void onBtnSaveClick(View target) {
 		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.pressbuttons)))){
@@ -160,7 +185,7 @@ public class MainActivity extends Activity {
 			uB.showToast(getString(R.string.nothing_to_save), 
 					Toast.LENGTH_SHORT, Gravity.TOP,0,0);					
 		}
-    }
+	}
 
 	public void onBtnShareClick(View target) {
 		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.pressbuttons)))){
@@ -173,7 +198,7 @@ public class MainActivity extends Activity {
 			uB.showToast(getString(R.string.nothing_to_share), 
 					Toast.LENGTH_SHORT, Gravity.TOP,0,0);					
 		}
-    }
+	}
 
 	/** Called when the activity is first created. */
 	@Override
@@ -181,7 +206,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		uB = new UsefulBits(this);
-		
+
 		Object lastState = getLastNonConfigurationInstance();
 
 		chkKeyEvents = (CheckBox) findViewById(R.id.chkKeyEvents);
