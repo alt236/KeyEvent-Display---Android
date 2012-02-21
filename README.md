@@ -40,7 +40,7 @@ Currently the filters are:
     1. keycharacter
 1. Kernel:
     1. HwGPIOE->GPDA
-    1.  keycode
+    1. keycode
     1. keycharacter
 
 Permission Explanation

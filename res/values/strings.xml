@@ -24,8 +24,8 @@
     <string name="ok">OK</string>
 
 
-	<string name="label_Show_Events">Events:</string> 
-	<string name="label_logcat">logcat</string> 
+	<string name="label_Show_Events">Show:</string> 
+	<string name="label_logcat">Logcat</string> 
 	<string name="label_kernel">Kernel</string> 
 	<string name="label_keyevents">KeyEvents</string> 
        
@@ -36,4 +36,8 @@
     <string name="label_menu_about">About</string>
     <string name="break_string">-------------------------</string>
     <string name="image_placeholder">Image Placeholder</string>
+    <string name="share_result_via">Share using:</string>
+    <string name="nothing_to_share">Nothing to share...</string>
+    <string name="nothing_to_save">Nothing to save...</string>
+    
 </resources>

@@ -18,31 +18,46 @@
             <Button
                 android:id="@+id/btnClear"
                 style="@style/my_button_style"
-                android:text="@string/button_clear" />
-
-            <Button
-                android:id="@+id/btnExport"
-                style="@style/my_button_style"
-                android:text="@string/button_export" />
+                android:text="@string/button_clear"
+                android:onClick="onBtnClearClick"/>
 
             <Button
                 android:id="@+id/btnBreak"
                 style="@style/my_button_style"
-                android:text="@string/button_break" />
+                android:text="@string/button_break"
+                android:onClick="onBtnBreakClick"/>
+                        
+            <ImageButton
+                android:id="@+id/btnSave"
+                style="@style/my_button_style"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_menu_save" 
+                android:contentDescription="@string/image_placeholder"
+                android:onClick="onBtnSaveClick"/>
 
+             <ImageButton
+                android:id="@+id/btnShare"
+                style="@style/my_button_style"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_menu_share" 
+                android:contentDescription="@string/image_placeholder"
+                android:onClick="onBtnShareClick"/>
+             
             <ImageButton
                 android:id="@+id/btnAbout"
                 style="@style/my_button_style"
                 android:scaleType="centerInside"
-                android:src="@android:drawable/ic_menu_info_details" 
-                android:contentDescription="@string/image_placeholder"/>
+                android:src="@drawable/ic_menu_info_details" 
+                android:contentDescription="@string/image_placeholder"
+                android:onClick="onBtnAboutClick"/>
 
             <ImageButton
                 android:id="@+id/btnExit"
                 style="@style/my_button_style"
                 android:scaleType="centerInside"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:contentDescription="@string/image_placeholder" />
+                android:src="@drawable/ic_menu_close_clear_cancel"
+                android:contentDescription="@string/image_placeholder"
+                android:onClick="onBtnExitClick"/>
         </LinearLayout>
 
         <LinearLayout

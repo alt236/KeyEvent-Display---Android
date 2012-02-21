@@ -25,6 +25,7 @@ import java.util.Date;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
@@ -163,5 +164,16 @@ public class UsefulBits {
 		Toast toast = Toast.makeText(c.getApplicationContext(), message, duration);
 		toast.setGravity(location,x_offset,y_offset);
 		toast.show();
+	}
+	
+	public void share(String subject, String text){
+		Intent intent = new Intent(Intent.ACTION_SEND);
+
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_TEXT, text);
+		intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		Intent share = Intent.createChooser(intent, c.getString(R.string.share_result_via));
+		c.startActivity(share);
 	}
 }

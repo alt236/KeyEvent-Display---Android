@@ -28,9 +28,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import aws.apps.keyeventdisplay.containers.MyMainActivityState;
@@ -39,22 +37,34 @@ import aws.apps.keyeventdisplay.monitors.LogCatMonitor;
 import aws.apps.keyeventdisplay.util.UsefulBits;
 
 public class MainActivity extends Activity {
+	
 	final String TAG = this.getClass().getName();
 	private static final int MAX_TEXT_LINES = 1024;
 
-	private TextView fldLog;
-	private Button btnExport;
-	private Button btnClear;
-	private Button btnBreak;
-	private CheckBox chkKeyEvents;
 	private CheckBox chkKernel;
+	private CheckBox chkKeyEvents;
 	private CheckBox chkLogcat;
-	private ImageButton btnAbout;
-	private ImageButton btnExit;
-	private UsefulBits uB;
+	private TextView fldLog;
 	private LogCatMonitor logCatM;
+	private UsefulBits uB;
 	private KernelLogMonitor kernelM;
-
+	
+	private final Handler kernelLogHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+			case LogCatMonitor.MSG_NEWLINE:
+				addKernelLine(msg.obj.toString());
+				break;
+			default:
+				super.handleMessage(msg);
+			}
+		}
+	};	
+	
 	private final Handler logcatHandler = new Handler()
 	{
 		@Override
@@ -71,32 +81,18 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	private final Handler kernelLogHandler = new Handler()
-	{
-		@Override
-		public void handleMessage(Message msg)
-		{
-			switch (msg.what)
-			{
-			case LogCatMonitor.MSG_NEWLINE:
-				addKernelLine(msg.obj.toString());
-				break;
-			default:
-				super.handleMessage(msg);
-			}
-		}
-	};
 
+	
 	public void addKernelLine(String text){
 		if (!chkKernel.isChecked()){return;}
 		displayLogLine("^ Kernel:       ", text, getResources().getColor(R.color.color_kernel));
 	}
-
+	
 	public void addLogCatLine(String text){
 		if (!chkLogcat.isChecked()){return;}
 		displayLogLine("^ Logcat:       ", text, getResources().getColor(R.color.color_logcat));
 	}
-
+	
 	private void displayKeyEvent(String title, KeyEvent event, int color) {
 		sanityCheck(fldLog);
 
@@ -117,7 +113,7 @@ public class MainActivity extends Activity {
 		fldLog.append(Html.fromHtml(sb.toString()));
 		uB.autoScroll(fldLog);
 	}
-
+	
 	private void displayLogLine(String title, String event, int color){
 		StringBuilder sb = new StringBuilder();
 		sb.append("<font color=" + color + ">" + title.replace(" ", "&nbsp;"));
@@ -129,22 +125,64 @@ public class MainActivity extends Activity {
 		fldLog.append(Html.fromHtml(sb.toString()));
 		uB.autoScroll(fldLog);
 	}
+	
+	private String getExportText(){
+		StringBuffer sb = new StringBuffer();
+
+		sb.append(fldLog.getText().toString());
+
+		return sb.toString();
+	}
+	
+	public void onBtnAboutClick(View target) {
+		uB.showAboutDialogue();
+    }
+	
+	public void onBtnBreakClick(View target) {
+		fldLog.append(Html.fromHtml("<font color="+getResources().getColor(R.color.lime)+">" + getString(R.string.break_string)+"</font><br/>"));
+    }
+
+	public void onBtnClearClick(View target) {
+		fldLog.setText(R.string.pressbuttons);
+		fldLog.scrollTo(0, 0);
+    }
+
+	public void onBtnExitClick(View target) {
+		onStop();
+		System.exit(0);
+    }
+
+	public void onBtnSaveClick(View target) {
+		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.pressbuttons)))){
+			String time = uB.formatDateTime("yyyy-MM-dd-HHmmssZ", new Date());
+			uB.saveToFile("keyevent_"+ time +".txt", Environment.getExternalStorageDirectory(), getExportText());
+		} else {
+			uB.showToast(getString(R.string.nothing_to_save), 
+					Toast.LENGTH_SHORT, Gravity.TOP,0,0);					
+		}
+    }
+
+	public void onBtnShareClick(View target) {
+		if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.pressbuttons)))){
+			String time = uB.formatDateTime("yyyy-MM-dd-HHmmssZ", new Date());
+
+			uB.share("keyevent_"+ time , getExportText());
+
+			uB.saveToFile("keyevent_"+ time, Environment.getExternalStorageDirectory(), fldLog.getText().toString());
+		} else {
+			uB.showToast(getString(R.string.nothing_to_share), 
+					Toast.LENGTH_SHORT, Gravity.TOP,0,0);					
+		}
+    }
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "^ Intent Started");
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		uB = new UsefulBits(this);
+		
 		Object lastState = getLastNonConfigurationInstance();
-
-		btnExport = (Button) findViewById(R.id.btnExport);
-		btnClear = (Button) findViewById(R.id.btnClear);
-		btnBreak = (Button) findViewById(R.id.btnBreak);
-		btnAbout = (ImageButton) findViewById(R.id.btnAbout);
-		btnExit = (ImageButton) findViewById(R.id.btnExit);
 
 		chkKeyEvents = (CheckBox) findViewById(R.id.chkKeyEvents);
 		chkKernel = (CheckBox) findViewById(R.id.chkKernel);
@@ -155,63 +193,14 @@ public class MainActivity extends Activity {
 			fldLog.setMovementMethod(new ScrollingMovementMethod());
 		}
 
-		if (!(lastState == null)) {
+		if (lastState != null) {
 
 			fldLog.setText(((MyMainActivityState)lastState).getLogText());
 			chkKernel.setChecked(((MyMainActivityState)lastState).isChkKenel());
 			chkKeyEvents.setChecked(((MyMainActivityState)lastState).isChkKeyEvents());
 			chkLogcat.setChecked(((MyMainActivityState)lastState).isChkLogcat());
 			uB.autoScroll(fldLog);
-		}
-
-		btnAbout.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				uB.showAboutDialogue();
-			}
-		});
-
-		btnExit.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				onStop();
-				System.exit(0);
-			}
-		});
-
-		btnClear.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				fldLog.setText(R.string.pressbuttons);
-				fldLog.scrollTo(0, 0);
-			}
-		});
-
-		btnBreak.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				fldLog.append(Html.fromHtml("<font color="+getResources().getColor(R.color.lime)+">" + getString(R.string.break_string)+"</font><br/>"));
-			}
-		});
-
-		btnExport.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if(fldLog.getText().toString().length()>0 && (!fldLog.getText().toString().equals(getString(R.string.pressbuttons)))){
-					String time = uB.formatDateTime("yyyy-MM-dd-HHmmssZ", new Date());
-					uB.saveToFile("keyevent_"+ time +".txt", Environment.getExternalStorageDirectory(), fldLog.getText().toString());
-				} else {
-					uB.showToast("Nothing to save...", 
-							Toast.LENGTH_SHORT, Gravity.TOP,0,0);					
-				}
-
-			}
-		});	
+		}	
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -262,7 +251,7 @@ public class MainActivity extends Activity {
 				runOnUiThread(new Runnable() {
 					public void run()
 					{
-						Toast.makeText(getApplicationContext(), msg + ": " + e,
+						Toast.makeText(getApplicationContext(),"LogCatMonitor: " +  msg + ": " + e,
 								Toast.LENGTH_LONG).show();
 					}
 				});
@@ -283,16 +272,15 @@ public class MainActivity extends Activity {
 			@Override
 			public void onError(final String msg, final Throwable e)
 			{
-				//super.onError(msg, e);
 				runOnUiThread(new Runnable() {
 					public void run()
 					{
-						Toast.makeText(getApplicationContext(), msg + ": " + e,
+						Toast.makeText(getApplicationContext(), "KernelLogMonitor: " + msg + ": " + e,
 								Toast.LENGTH_LONG).show();
 					}
 				});
 			}
-			
+
 			@Override
 			public void onNewline(String line)
 			{
@@ -308,10 +296,6 @@ public class MainActivity extends Activity {
 		super.onStart();
 	}
 
-
-	//
-	/////////////////////////////////////////////////////////////////
-	//
 
 	@Override
 	public void onStop()
