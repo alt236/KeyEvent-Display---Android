@@ -1,9 +1,9 @@
 KeyEvent Display - Android
 ========================
 
-Once, I was playing with a number of Chinese tablets and trying different ROMs on them as they are technically the same hardware [HSG X5A variants](http://www.huashiguang.com/MID.html)).
+Once, I was playing with a number of Chinese tablets and trying different ROMs on them as they are technically the same hardware ([HSG X5A variants](http://www.huashiguang.com/MID.html)).
 
-I've had some problems getting the hard buttons to work though, so I wrote this application to detect key events and print them out.
+I've had some problems getting the hard buttons to work though, so I wrote this application to detect key events and print them out. It will print out the following:
 
 * KeyEvents:  The KeyEvents as Android understands them (KeyUp, KeyDown, KeyLongPress, KeyMultiple)
 
@@ -11,7 +11,9 @@ I've had some problems getting the hard buttons to work though, so I wrote this 
 
 * Kernel: Any relevant messages in the kernel log. Its filtered based on keywords declared in `arrays.xml`. Kernel log parsing needs root.
 
+
 The three checkboxes at the top control what information will be displayed.
+
 
 * This is a personal debug tool, but I hope it will be of some use to someone else.
 
@@ -29,7 +31,8 @@ Notes
   
 * Both logcat and kernel log monitoring will only display lines containing words from two arrays in `arrays.xml`
     
-* Currently the filters are:
+Currently the filters are:
+
 
 1. Logcat:
     1. HwGPIOE->GPDA
