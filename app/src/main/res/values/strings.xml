@@ -5,8 +5,8 @@
 		Acknowledgements:\n
 		·Original icon by OCAL: http://www.clker.com/clipart-1914.html
 	</string>
-	
-	<string name="app_copyright">Copyright A. Schillings, 2010</string>
+
+    <string name="app_copyright">Copyright A. Schillings, 2010</string>
 	
 	<string name="app_changelog">
 		Changelog:\n
@@ -21,25 +21,25 @@
 		·While the application is running, the only "hard" keys which should work is "Home" and power. All others will produce their keycodes.\n
 		·The SU request is to read the kernel log, so the app can check if any key related messages are thrown by the kernel.\n
 		·The location of keylayout files in Android is "/system/usr/keylayout".
-	</string>   
+	</string>
     <string name="ok">OK</string>
 
 
-	<string name="label_Show_Events">Show:</string> 
-	<string name="label_logcat">Logcat</string> 
-	<string name="label_kernel">Kernel</string> 
-	<string name="label_keyevents">KeyEvents</string> 
-       
-    <string name="button_clear">Clear</string> 
-	<string name="button_break">Break</string>
-	    
+    <string name="label_Show_Events">Show:</string>
+    <string name="label_logcat">Logcat</string>
+    <string name="label_kernel">Kernel</string>
+    <string name="label_keyevents">KeyEvents</string>
+
+    <string name="button_clear">Clear</string>
+    <string name="button_break">Break</string>
+
     <string name="greeting">Press buttons to see the keycodes:\n</string>
-    
+
     <string name="label_menu_about">About</string>
     <string name="break_string">-------------------------</string>
     <string name="image_placeholder">Image Placeholder</string>
     <string name="share_result_via">Share using:</string>
     <string name="nothing_to_share">Nothing to share...</string>
     <string name="nothing_to_save">Nothing to save...</string>
-    
+
 </resources>
