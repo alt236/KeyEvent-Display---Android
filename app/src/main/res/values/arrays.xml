@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="kmsg_filter">
+        <item>HwGPIOE->GPDA</item>
+        <item>keycode</item>
+        <item>keycharacter</item>
+    </string-array>
+    
+    <string-array name="logcat_filter">
+        <item>HwGPIOE->GPDA</item>
+        <item>keycode</item>
+        <item>keycharacter</item>
+    </string-array>
+    
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="my_checkbox_style">
+		<item name="android:textSize">11dip</item>
+		<item name="android:layout_height">40dip</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+	</style>
+
+	<style name="my_button_style">
+		<item name="android:textSize">11dip</item>
+		<item name="android:layout_height">40dip</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:ellipsize">none</item>
+	</style>
+</resources>
