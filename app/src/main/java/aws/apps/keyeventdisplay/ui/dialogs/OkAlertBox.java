@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package aws.apps.keyeventdisplay.ui;
+package aws.apps.keyeventdisplay.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,19 +25,18 @@ import android.widget.TextView;
 
 import aws.apps.keyeventdisplay.R;
 
-public class MyAlertBox {
+/*package*/ final class OkAlertBox {
 
-    public static AlertDialog create(Context context, String text, String title, String button) {
+    public static AlertDialog create(Context context, String text, String title, String buttonText) {
         return new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setCancelable(true)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setPositiveButton(button, null)
+                .setPositiveButton(buttonText, null)
                 .setView(LinkifyText(context, text))
                 .create();
     }
 
-    public static ScrollView LinkifyText(Context context, String message) {
+    private static ScrollView LinkifyText(Context context, String message) {
         ScrollView svMessage = new ScrollView(context);
         TextView tvMessage = new TextView(context);
 
