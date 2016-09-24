@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package aws.apps.keyeventdisplay.containers;
+package aws.apps.keyeventdisplay.ui.main;
 
-public class MyMainActivityState {
+/*package*/class MainActivityState {
     private CharSequence logText;
     private boolean chkKeyEvents;
     private boolean chkLogcat;
