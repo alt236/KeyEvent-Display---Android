@@ -2,69 +2,69 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         style="@android:style/ButtonBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnClear"
                 style="@style/my_button_style"
-                android:text="@string/button_clear"
-                android:onClick="onBtnClearClick"/>
+                android:onClick="onBtnClearClick"
+                android:text="@string/button_clear" />
 
             <Button
                 android:id="@+id/btnBreak"
                 style="@style/my_button_style"
-                android:text="@string/button_break"
-            
-                android:onClick="onBtnBreakClick"/>
-                        
+                android:onClick="onBtnBreakClick"
+
+                android:text="@string/button_break" />
+
             <ImageButton
                 android:id="@+id/btnSave"
                 style="@style/my_button_style"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_menu_save" 
                 android:contentDescription="@string/image_placeholder"
-                android:onClick="onBtnSaveClick"/>
+                android:onClick="onBtnSaveClick"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_menu_save" />
 
-             <ImageButton
+            <ImageButton
                 android:id="@+id/btnShare"
                 style="@style/my_button_style"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_menu_share" 
                 android:contentDescription="@string/image_placeholder"
-                android:onClick="onBtnShareClick"/>
-             
+                android:onClick="onBtnShareClick"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_menu_share" />
+
             <ImageButton
                 android:id="@+id/btnAbout"
                 style="@style/my_button_style"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_menu_info_details" 
                 android:contentDescription="@string/image_placeholder"
-                android:onClick="onBtnAboutClick"/>
+                android:onClick="onBtnAboutClick"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_menu_info_details" />
 
             <ImageButton
                 android:id="@+id/btnExit"
                 style="@style/my_button_style"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_menu_close_clear_cancel"
                 android:contentDescription="@string/image_placeholder"
-                android:onClick="onBtnExitClick"/>
+                android:onClick="onBtnExitClick"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_menu_close_clear_cancel" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -83,8 +83,8 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"
-                android:layout_margin="5dp" />
+                android:layout_margin="5dp"
+                android:background="@android:color/darker_gray" />
 
             <CheckBox
                 android:id="@+id/chkLogCat"
@@ -96,8 +96,8 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"
-                android:layout_margin="5dp" />
+                android:layout_margin="5dp"
+                android:background="@android:color/darker_gray" />
 
             <CheckBox
                 android:id="@+id/chkKernel"
@@ -112,7 +112,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true" >
+        android:fillViewport="true">
 
         <TextView
             android:id="@+id/fldEvent"
