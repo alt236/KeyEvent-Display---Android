@@ -1,4 +1,4 @@
-package aws.apps.keyeventdisplay.ui.main;
+package aws.apps.keyeventdisplay.ui.main.export;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import java.util.Locale;
 import aws.apps.keyeventdisplay.R;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 
-/*package*/ class Exporter {
+public class Exporter {
     private static final String TAG = Exporter.class.getSimpleName();
     private static final Format TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HHmmssZ", Locale.US);
     private static final String FILENAME_FORMATTER = "keyevent_%s.txt";
@@ -31,27 +31,37 @@ import aws.apps.keyeventdisplay.ui.common.NotifyUser;
         this.notifyUser = notifyUser;
     }
 
-    public void save(String text) {
-        if (isValidText(text)) {
+    public void save(CharSequence text) {
+        final String exportableText = getExportText(text);
+        if (isValidText(exportableText)) {
             final String time = getNow();
             final String fileName = String.format(Locale.US, FILENAME_FORMATTER, time);
             final File directory = Environment.getExternalStorageDirectory();
 
-            saveToFile(fileName, directory, text);
+            saveToFile(fileName, directory, exportableText);
         } else {
             notifyUser.notifyShort(R.string.nothing_to_save);
         }
     }
 
-    public void share(String text) {
-        if (isValidText(text)) {
+    public void share(CharSequence text) {
+        final String exportableText = getExportText(text);
+        if (isValidText(exportableText)) {
             final String time = getNow();
             final String subject = String.format(Locale.US, SUBJECT_FORMATTER, time);
-            final Intent intent = createShareIntent(subject, text);
+            final Intent intent = createShareIntent(subject, exportableText);
             activity.startActivity(intent);
         } else {
             notifyUser.notifyShort(R.string.nothing_to_share);
         }
+    }
+
+    private String getExportText(final CharSequence text) {
+        final StringBuilder sb = new StringBuilder();
+        DeviceInfo.collectDeviceInfo(sb);
+        sb.append("\n\n-----------------\n\n");
+        sb.append(text);
+        return sb.toString();
     }
 
     private void saveToFile(String fileName, File directory, String contents) {
