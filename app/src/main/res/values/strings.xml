@@ -22,7 +22,6 @@
 		·The SU request is to read the kernel log, so the app can check if any key related messages are thrown by the kernel.\n
 		·The location of keylayout files in Android is "/system/usr/keylayout".
 	</string>
-    <string name="ok">OK</string>
 
 
     <string name="label_Show_Events">Show:</string>
@@ -35,7 +34,6 @@
 
     <string name="greeting">Press buttons to see the keycodes:\n</string>
 
-    <string name="label_menu_about">About</string>
     <string name="break_string">-------------------------</string>
     <string name="image_placeholder">Image Placeholder</string>
     <string name="share_result_via">Share using:</string>
