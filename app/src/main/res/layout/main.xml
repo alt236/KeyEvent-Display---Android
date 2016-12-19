@@ -32,7 +32,7 @@
                 style="@style/BorderlessImageButton"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnSaveClick"
-                android:src="@drawable/ic_menu_save" />
+                android:src="@drawable/ic_save"/>
 
             <ImageButton
                 android:id="@+id/btnShare"
@@ -40,21 +40,21 @@
                 android:layout_width="48dp"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnShareClick"
-                android:src="@drawable/ic_menu_share" />
+                android:src="@drawable/ic_share"/>
 
             <ImageButton
                 android:id="@+id/btnAbout"
                 style="@style/BorderlessImageButton"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnAboutClick"
-                android:src="@drawable/ic_menu_info_details" />
+                android:src="@drawable/ic_info"/>
 
             <ImageButton
                 android:id="@+id/btnExit"
                 style="@style/BorderlessImageButton"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnExitClick"
-                android:src="@drawable/ic_menu_close_clear_cancel" />
+                android:src="@drawable/ic_close"/>
         </LinearLayout>
 
         <LinearLayout
