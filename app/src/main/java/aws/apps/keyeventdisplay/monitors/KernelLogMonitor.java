@@ -23,63 +23,87 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public abstract class KernelLogMonitor extends AbstractMonitor {
-    public static final String KERNEL_LOG_CMD = "cat /proc/kmsg";
-    private final String TAG = this.getClass().getName();
+public class KernelLogMonitor implements Monitor {
+    private static final String SU_CMD = "su";
+    private static final String KERNEL_LOG_CMD = "cat /proc/kmsg";
+    private final Filter filter;
+    private KernelMonitorRunnable runnable;
 
     public KernelLogMonitor(String[] stringArray) {
-        loadWordList(stringArray);
+        filter = new Filter(stringArray);
     }
 
     @Override
-    protected abstract void onError(String msg, Throwable e);
+    public void startMonitor(final MonitorCallback callback) {
+        runnable = new KernelMonitorRunnable(callback, filter);
+        new Thread(runnable).start();
+    }
 
     @Override
-    protected abstract void onNewline(String line);
+    public void stopMonitor() {
+        if (runnable != null) {
+            runnable.stop();
+            runnable = null;
+        }
+    }
 
-    public void run() {
-        Log.d(TAG, "^ KernelLogMonitor started...");
-        String line;
-        BufferedReader reader = null;
 
-        mProcess = execute("su");
-        if (mProcess == null) {
-            Log.e(TAG, "^ KernelLogMonitor: Can't open log file. Exiting.");
-            return;
+    private static class KernelMonitorRunnable implements Runnable {
+        private final String TAG = this.getClass().getName();
+        private final MonitorCallback callback;
+        private final ProcessWrapper processWrapper;
+        private final Filter filter;
+        private boolean stopped;
+
+        private KernelMonitorRunnable(final MonitorCallback callback,
+                                      final Filter filter) {
+            this.callback = callback;
+            this.filter = filter;
+            this.processWrapper = new ProcessWrapper();
         }
 
-        try {
-            DataInputStream is = new DataInputStream(mProcess.getInputStream());
-            OutputStreamWriter os = new OutputStreamWriter(mProcess.getOutputStream());
+        public void stop() {
+            stopped = true;
+        }
 
-            os.write(KERNEL_LOG_CMD + "\n");
-            os.flush();
-            os.close();
+        @Override
+        public void run() {
+            Log.d(TAG, "KernelLogMonitor started...");
+            String line;
+            BufferedReader reader = null;
 
-            reader = new BufferedReader(new InputStreamReader(is), BUFFER_SIZE);
-
-            Log.d(TAG, "^ Pre loop!");
-
-            while ((line = reader.readLine()) != null) {
-                Log.d(TAG, "^ New line!");
-                if (isValidLine(line)) {
-                    onNewline(line);
-                }
-            }
-
-            Log.d(TAG, "^ Post loop!");
-        } catch (IOException e) {
-            Log.e(TAG, "^ KernelLogMonitor error: " + e.getMessage());
-            onError("Error reading from process " + KERNEL_LOG_CMD, e);
-        } finally {
-            if (reader != null)
+            final boolean procStartedOk = processWrapper.execute(SU_CMD);
+            if (!procStartedOk) {
+                Log.e(TAG, "KernelLogMonitor: Can't open log file. Exiting.");
+            } else {
                 try {
-                    reader.close();
-                } catch (IOException e) {
-                }
+                    final DataInputStream is = new DataInputStream(processWrapper.getInputStream());
+                    final OutputStreamWriter os = new OutputStreamWriter(processWrapper.getOutputStream());
 
-            stopCatter();
+                    os.write(KERNEL_LOG_CMD + "\n");
+                    os.flush();
+                    os.close();
+
+                    reader = new BufferedReader(new InputStreamReader(is), BUFFER_SIZE);
+
+                    Log.d(TAG, "Pre loop!");
+
+                    while ((line = reader.readLine()) != null && !stopped) {
+                        Log.d(TAG, "New line!");
+                        if (filter.isValidLine(line)) {
+                            callback.onNewline(line);
+                        }
+                    }
+
+                    Log.d(TAG, "Post loop!");
+                } catch (IOException e) {
+                    Log.e(TAG, "KernelLogMonitor error: " + e.getMessage());
+                    callback.onError("Error reading from process " + KERNEL_LOG_CMD, e);
+                } finally {
+                    Helper.close(reader);
+                }
+                Log.d(TAG, "KernelLogMonitor has finished...");
+            }
         }
-        Log.d(TAG, "^ KernelLogMonitor has finished...");
     }
 }

@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import aws.apps.keyeventdisplay.R;
-import aws.apps.keyeventdisplay.ui.NotifyUser;
+import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 
 /*package*/ class Exporter {
     private static final String TAG = Exporter.class.getSimpleName();
@@ -25,10 +25,6 @@ import aws.apps.keyeventdisplay.ui.NotifyUser;
 
     private final Activity activity;
     private final NotifyUser notifyUser;
-
-    public Exporter(final Activity activity) {
-        this(activity, new NotifyUser(activity));
-    }
 
     public Exporter(final Activity activity, NotifyUser notifyUser) {
         this.activity = activity;

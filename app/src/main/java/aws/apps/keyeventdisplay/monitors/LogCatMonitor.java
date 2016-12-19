@@ -21,57 +21,79 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public abstract class LogCatMonitor extends AbstractMonitor {
-    public static final String[] LOGCAT_CLEAR_CMD = new String[]{"logcat", "-c"};
-    public static final String[] LOGCAT_CMD = new String[]{"logcat"};
-    final String TAG = this.getClass().getName();
+public class LogCatMonitor implements Monitor {
+    private static final String[] LOGCAT_CLEAR_CMD = new String[]{"logcat", "-c"};
+    private static final String[] LOGCAT_CMD = new String[]{"logcat"};
+    private final Filter filter;
+    private LogCatMonitorRunnable runnable;
 
     public LogCatMonitor(String[] stringArray) {
-        loadWordList(stringArray);
+        filter = new Filter(stringArray);
     }
 
     @Override
-    protected abstract void onError(String msg, Throwable e);
+    public void startMonitor(final MonitorCallback callback) {
+        runnable = new LogCatMonitorRunnable(callback, filter);
+        new Thread(runnable).start();
+    }
 
     @Override
-    protected abstract void onNewline(String line);
+    public void stopMonitor() {
+        if (runnable != null) {
+            runnable.stop();
+            runnable = null;
+        }
+    }
 
-    public void run() {
-        Log.d(TAG, "^ LogCatMonitor started...");
-        BufferedReader reader = null;
-        String line;
+    private static class LogCatMonitorRunnable implements Runnable {
+        private final String TAG = this.getClass().getName();
+        private final MonitorCallback callback;
+        private final ProcessWrapper processWrapper;
+        private final Filter filter;
+        private boolean stopped;
 
-        execute(LOGCAT_CLEAR_CMD);
-        mProcess = execute(LOGCAT_CMD);
-
-        if (mProcess == null) {
-            Log.e(TAG, "^ LogCatMonitor: Can't open log file. Exiting.");
-            return;
+        private LogCatMonitorRunnable(final MonitorCallback callback,
+                                      final Filter filter) {
+            this.callback = callback;
+            this.filter = filter;
+            this.processWrapper = new ProcessWrapper();
         }
 
-        try {
-            reader = new BufferedReader(new InputStreamReader(
-                    mProcess.getInputStream()), BUFFER_SIZE);
+        public void stop() {
+            stopped = true;
+        }
 
-            Log.d(TAG, "^ Pre loop!");
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains(TAG) && isValidLine(line)) {
-                    onNewline(line);
-                }
-            }
-            Log.d(TAG, "^ Post loop!");
-        } catch (IOException e) {
-            Log.e(TAG, "^ LogCatMonitor error: " + e.getMessage());
-            onError("Error reading from process " + LOGCAT_CMD[0], e);
-        } finally {
-            if (reader != null)
+        @Override
+        public void run() {
+            Log.d(TAG, "LogCatMonitor started...");
+            BufferedReader reader = null;
+            String line;
+
+            processWrapper.execute(LOGCAT_CLEAR_CMD);
+            final boolean procStartedOk = processWrapper.execute(LOGCAT_CMD);
+
+            if (!procStartedOk) {
+                Log.e(TAG, "LogCatMonitor: Can't open log file. Exiting.");
+            } else {
                 try {
-                    reader.close();
+                    reader = new BufferedReader(new InputStreamReader(processWrapper.getInputStream()), BUFFER_SIZE);
+
+                    Log.d(TAG, "Pre loop!");
+                    while ((line = reader.readLine()) != null && !stopped) {
+                        if (!line.contains(TAG) && filter.isValidLine(line)) {
+                            callback.onNewline(line);
+                        }
+                    }
+                    Log.d(TAG, "Post loop!");
                 } catch (IOException e) {
+                    Log.e(TAG, "LogCatMonitor error: " + e.getMessage());
+                    callback.onError("Error reading from process " + LOGCAT_CMD[0], e);
+                } finally {
+                    Helper.close(reader);
                 }
 
-            stopCatter();
+                Log.w(TAG, "LogCatMonitor thread has exited...");
+            }
         }
-        Log.w(TAG, "^ LogCatMonitor thread has exited...");
     }
 }

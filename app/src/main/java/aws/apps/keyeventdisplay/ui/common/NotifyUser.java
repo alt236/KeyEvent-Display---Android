@@ -1,4 +1,4 @@
-package aws.apps.keyeventdisplay.ui;
+package aws.apps.keyeventdisplay.ui.common;
 
 import android.content.Context;
 import android.widget.Toast;
