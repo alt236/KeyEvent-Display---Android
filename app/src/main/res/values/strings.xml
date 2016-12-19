@@ -34,10 +34,9 @@
 
     <string name="greeting">Press buttons to see the keycodes:\n</string>
 
-    <string name="break_string">-------------------------</string>
     <string name="image_placeholder">Image Placeholder</string>
     <string name="share_result_via">Share using:</string>
-    <string name="nothing_to_share">Nothing to share...</string>
-    <string name="nothing_to_save">Nothing to save...</string>
+	<string name="nothing_to_share">Nothing to share…</string>
+	<string name="nothing_to_save">Nothing to save…</string>
 
 </resources>

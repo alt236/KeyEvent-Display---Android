@@ -1,4 +1,4 @@
-package aws.apps.keyeventdisplay.ui.main;
+package aws.apps.keyeventdisplay.ui.main.export;
 
 /*package*/ final class DeviceInfo {
 
