@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
             final ActivityState activityState = (ActivityState) lastState;
 
             fldLog.setText(activityState.getLogText());
-            chkKernel.setChecked(activityState.isChkKenel());
+            chkKernel.setChecked(activityState.isChkKernel());
             chkKeyEvents.setChecked(activityState.isChkKeyEvents());
             chkLogcat.setChecked(activityState.isChkLogcat());
             logViewWrapper.autoScroll();
@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
     @Override
     public Object onRetainNonConfigurationInstance() {
         final ActivityState state = new ActivityState();
-        state.setChkKenel(chkKernel.isChecked());
+        state.setChkKernel(chkKernel.isChecked());
         state.setChkLogcat(chkLogcat.isChecked());
         state.setChkKeyEvents(chkKeyEvents.isChecked());
         state.setLogText(logViewWrapper.getText());

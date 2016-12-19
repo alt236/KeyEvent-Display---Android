@@ -19,7 +19,7 @@ package aws.apps.keyeventdisplay.ui.main;
     private CharSequence logText;
     private boolean chkKeyEvents;
     private boolean chkLogcat;
-    private boolean chkKenel;
+    private boolean chkKernel;
 
     public CharSequence getLogText() {
         return logText;
@@ -29,12 +29,12 @@ package aws.apps.keyeventdisplay.ui.main;
         this.logText = logText;
     }
 
-    public boolean isChkKenel() {
-        return chkKenel;
+    public boolean isChkKernel() {
+        return chkKernel;
     }
 
-    public void setChkKenel(boolean chkKenel) {
-        this.chkKenel = chkKenel;
+    public void setChkKernel(boolean chkKernel) {
+        this.chkKernel = chkKernel;
     }
 
     public boolean isChkKeyEvents() {
