@@ -17,19 +17,17 @@ package aws.apps.keyeventdisplay.ui.main;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import aws.apps.keyeventdisplay.R;
 import aws.apps.keyeventdisplay.monitors.KernelLogMonitor;
 import aws.apps.keyeventdisplay.monitors.LogCatMonitor;
-import aws.apps.keyeventdisplay.ui.NotifyUser;
+import aws.apps.keyeventdisplay.monitors.MonitorCallback;
+import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 import aws.apps.keyeventdisplay.ui.dialogs.DialogFactory;
 
 public class MainActivity extends Activity {
@@ -43,30 +41,6 @@ public class MainActivity extends Activity {
     private NotifyUser notifyUser;
     private Exporter exporter;
     private LogViewWrapper logViewWrapper;
-    private final Handler kernelLogHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case KernelLogMonitor.MSG_NEWLINE:
-                    addKernelLine(msg.obj.toString());
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    };
-    private final Handler logcatHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case LogCatMonitor.MSG_NEWLINE:
-                    addLogCatLine(msg.obj.toString());
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    };
     private TextView fldLog;
 
     private String getExportText() {
@@ -130,6 +104,11 @@ public class MainActivity extends Activity {
 
         logViewWrapper = new LogViewWrapper(fldLog);
 
+        final String[] logCatFilter = getResources().getStringArray(R.array.logcat_filter);
+        final String[] kernelFilter = getResources().getStringArray(R.array.kmsg_filter);
+        logCatM = new LogCatMonitor(logCatFilter);
+        kernelM = new KernelLogMonitor(kernelFilter);
+
         final Object lastState = getLastNonConfigurationInstance();
         if (lastState != null) {
             fldLog.setText(((MainActivityState) lastState).getLogText());
@@ -177,82 +156,66 @@ public class MainActivity extends Activity {
     @Override
     public void onStart() {
         Log.d(TAG, "^ onStart called");
-        logCatM = new LogCatMonitor(getResources().getStringArray(R.array.logcat_filter)) {
+
+        logCatM.startMonitor(new MonitorCallback() {
             @Override
             public void onError(final String msg, final Throwable e) {
                 //super.onError(msg, e);
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "LogCatMonitor: " + msg + ": " + e,
-                                Toast.LENGTH_LONG).show();
+                        notifyUser.notifyLong("LogCatMonitor: " + msg + ": " + e);
                     }
                 });
             }
 
             @Override
             public void onNewline(String line) {
-                //super.onNewline(line);
-                Message msg = logcatHandler.obtainMessage(LogCatMonitor.MSG_NEWLINE);
-                msg.obj = line;
-                logcatHandler.sendMessage(msg);
+                addLogCatLine(line);
             }
-        };
+        });
 
-        kernelM = new KernelLogMonitor(getResources().getStringArray(R.array.kmsg_filter)) {
+        kernelM.startMonitor(new MonitorCallback() {
             @Override
             public void onError(final String msg, final Throwable e) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "KernelLogMonitor: " + msg + ": " + e,
-                                Toast.LENGTH_LONG).show();
+                        notifyUser.notifyLong("KernelLogMonitor: " + msg + ": " + e);
                     }
                 });
             }
 
             @Override
             public void onNewline(String line) {
-                Message msg = logcatHandler.obtainMessage(KernelLogMonitor.MSG_NEWLINE);
-                msg.obj = line;
-                kernelLogHandler.sendMessage(msg);
+                addKernelLine(line);
             }
-        };
 
-        logCatM.start();
-        Log.d(TAG, "^ kernelFilter: " + kernelM.getFilterWords());
-        kernelM.start();
+        });
         super.onStart();
     }
 
     @Override
     public void onStop() {
         Log.d(TAG, "^ onStop called");
-        logCatM.stopCatter();
-        logCatM = null;
-
-        kernelM.stopCatter();
-        kernelM = null;
+        logCatM.stopMonitor();
+        kernelM.stopMonitor();
         super.onStop();
     }
 
     public void addKernelLine(String text) {
-        if (!chkKernel.isChecked()) {
-            return;
+        if (chkKernel.isChecked()) {
+            logViewWrapper.appendLogLine("^ Kernel:       ", text, getResources().getColor(R.color.color_kernel));
         }
-        logViewWrapper.appendLogLine("^ Kernel:       ", text, getResources().getColor(R.color.color_kernel));
     }
 
     public void addLogCatLine(String text) {
-        if (!chkLogcat.isChecked()) {
-            return;
+        if (chkLogcat.isChecked()) {
+            logViewWrapper.appendLogLine("^ Logcat:       ", text, getResources().getColor(R.color.color_logcat));
         }
-        logViewWrapper.appendLogLine("^ Logcat:       ", text, getResources().getColor(R.color.color_logcat));
     }
 
     public void addKeyEventLine(final String key, final KeyEvent event, final int colorId) {
-        if (!chkKeyEvents.isChecked()) {
-            return;
+        if (chkKeyEvents.isChecked()) {
+            logViewWrapper.appendKeyEvent(key, event, getResources().getColor(colorId));
         }
-
-        logViewWrapper.appendKeyEvent(key, event, getResources().getColor(colorId));
     }
 }
