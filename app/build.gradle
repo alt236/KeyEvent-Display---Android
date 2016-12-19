@@ -1,19 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 13
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "aws.apps.keyeventdisplay"
+
         minSdkVersion 4
-        targetSdkVersion 13
+        targetSdkVersion 25
+
+        buildConfigField "boolean", "STRICT_MODE", "true"
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            buildConfigField "boolean", "STRICT_MODE", "false"
         }
     }
 }
