@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        style="@android:style/ButtonBar"
+        style="?attr/buttonBarStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -17,47 +17,43 @@
 
             <Button
                 android:id="@+id/btnClear"
-                style="@style/my_button_style"
+                style="@style/BorderlessButton"
                 android:onClick="onBtnClearClick"
                 android:text="@string/button_clear" />
 
             <Button
                 android:id="@+id/btnBreak"
-                style="@style/my_button_style"
+                style="@style/BorderlessButton"
                 android:onClick="onBtnBreakClick"
-
                 android:text="@string/button_break" />
 
             <ImageButton
                 android:id="@+id/btnSave"
-                style="@style/my_button_style"
+                style="@style/BorderlessImageButton"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnSaveClick"
-                android:scaleType="centerInside"
                 android:src="@drawable/ic_menu_save" />
 
             <ImageButton
                 android:id="@+id/btnShare"
-                style="@style/my_button_style"
+                style="@style/BorderlessButton"
+                android:layout_width="48dp"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnShareClick"
-                android:scaleType="centerInside"
                 android:src="@drawable/ic_menu_share" />
 
             <ImageButton
                 android:id="@+id/btnAbout"
-                style="@style/my_button_style"
+                style="@style/BorderlessImageButton"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnAboutClick"
-                android:scaleType="centerInside"
                 android:src="@drawable/ic_menu_info_details" />
 
             <ImageButton
                 android:id="@+id/btnExit"
-                style="@style/my_button_style"
+                style="@style/BorderlessImageButton"
                 android:contentDescription="@string/image_placeholder"
                 android:onClick="onBtnExitClick"
-                android:scaleType="centerInside"
                 android:src="@drawable/ic_menu_close_clear_cancel" />
         </LinearLayout>
 
@@ -69,41 +65,33 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_Show_Events"
-                android:textColor="@color/default_text_color" />
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
+                android:text="@string/label_Show_Events"/>
 
             <CheckBox
                 android:id="@+id/chkKeyEvents"
-                style="@style/my_checkbox_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:checked="true"
                 android:text="@string/label_keyevents" />
 
-            <View
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:background="@android:color/darker_gray" />
-
             <CheckBox
                 android:id="@+id/chkLogCat"
-                style="@style/my_checkbox_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:text="@string/label_logcat" />
-
-            <View
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:background="@android:color/darker_gray" />
 
             <CheckBox
                 android:id="@+id/chkKernel"
-                style="@style/my_checkbox_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
                 android:text="@string/label_kernel" />
         </LinearLayout>
     </LinearLayout>
@@ -122,7 +110,7 @@
             android:scrollbars="vertical"
             android:text="@string/greeting"
             android:textColor="@color/lime"
-            android:textSize="12dip"
+            android:textSize="12sp"
             android:typeface="monospace" />
     </HorizontalScrollView>
 

@@ -1,17 +1,50 @@
 package aws.apps.keyeventdisplay.ui.dialogs;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import aws.apps.keyeventdisplay.BuildConfig;
 import aws.apps.keyeventdisplay.R;
 
 public final class DialogFactory {
 
-
     public static Dialog createAboutDialog(final Context context) {
+        final View view = LayoutInflater.from(context).inflate(R.layout.dialog_textview, null);
+        final TextView textView = (TextView) view.findViewById(R.id.text);
+
+        final SpannableString text = new SpannableString(getAboutText(context));
+
+        textView.setText(text);
+        textView.setAutoLinkMask(Activity.RESULT_OK);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        Linkify.addLinks(text, Linkify.ALL);
+
+        final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+            }
+        };
+
+        final String title = context.getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME;
+        return new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, listener)
+                .setView(view)
+                .create();
+    }
+
+    private static String getAboutText(final Context context) {
         String text = "";
-        String title = "";
 
         text += context.getString(R.string.app_changelog);
         text += "\n\n";
@@ -20,12 +53,7 @@ public final class DialogFactory {
         text += context.getString(R.string.app_acknowledgements);
         text += "\n\n";
         text += context.getString(R.string.app_copyright);
-        title = context.getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME;
 
-        return OkAlertBox.create(context, text, title, context.getString(R.string.ok));
-    }
-
-    public static Dialog createOkDialog(Context context, String text, String title, String button) {
-        return OkAlertBox.create(context, text, title, button);
+        return text;
     }
 }
