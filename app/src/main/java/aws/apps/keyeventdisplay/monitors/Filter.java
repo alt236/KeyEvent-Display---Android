@@ -11,7 +11,7 @@ import java.util.Set;
     private final Set<String> filteredWords;
 
     public Filter(final String[] wordlist) {
-        filteredWords = new HashSet<String>();
+        filteredWords = new HashSet<>();
         loadWordList(wordlist);
     }
 
