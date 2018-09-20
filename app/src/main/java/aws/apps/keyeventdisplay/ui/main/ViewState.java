@@ -15,7 +15,7 @@
  ******************************************************************************/
 package aws.apps.keyeventdisplay.ui.main;
 
-/*package*/class ActivityState {
+/*package*/class ViewState {
     private CharSequence logText;
     private boolean chkKeyEvents;
     private boolean chkLogcat;

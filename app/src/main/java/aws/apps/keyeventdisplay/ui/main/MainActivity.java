@@ -20,11 +20,9 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
 import aws.apps.keyeventdisplay.R;
+import aws.apps.keyeventdisplay.monitors.Monitor;
 import aws.apps.keyeventdisplay.monitors.MonitorCallback;
 import aws.apps.keyeventdisplay.monitors.kernel.KernelLogMonitor;
 import aws.apps.keyeventdisplay.monitors.logcat.LogCatMonitor;
@@ -32,7 +30,6 @@ import aws.apps.keyeventdisplay.ui.common.ColorProvider;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 import aws.apps.keyeventdisplay.ui.dialogs.DialogFactory;
 import aws.apps.keyeventdisplay.ui.main.export.Exporter;
-import aws.apps.keyeventdisplay.ui.main.logview.LogViewWrapper;
 
 public class MainActivity extends Activity {
     public static final String LOG_LINE_KERNEL = "Kernel:       ";
@@ -45,89 +42,40 @@ public class MainActivity extends Activity {
 
     private static final int LAYOUT_ID = R.layout.activity_main;
 
-    private CheckBox chkKernel;
-    private CheckBox chkKeyEvents;
-    private CheckBox chkLogcat;
-    private LogCatMonitor logCatM;
-    private KernelLogMonitor kernelM;
+    private Monitor logCatMonitor;
+    private Monitor kernelMonitor;
     private NotifyUser notifyUser;
     private Exporter exporter;
-    private LogViewWrapper logViewWrapper;
-    private TextView fldLog;
     private ColorProvider colorProvider;
+    private aws.apps.keyeventdisplay.ui.main.View view;
 
-    public void onBtnAboutClick(View target) {
-        DialogFactory.createAboutDialog(this).show();
-    }
-
-    public void onBtnBreakClick(View target) {
-        logViewWrapper.appendBreak();
-    }
-
-    public void onBtnClearClick(View target) {
-        logViewWrapper.clear();
-    }
-
-    public void onBtnExitClick(View target) {
-        onStop();
-        System.exit(0);
-    }
-
-    public void onBtnSaveClick(View target) {
-        if (hasSharableContent()) {
-            exporter.save(logViewWrapper.getText());
-        } else {
-            notifyUser.notifyShort(R.string.nothing_to_save);
-        }
-    }
-
-    public void onBtnShareClick(View target) {
-        if (hasSharableContent()) {
-            exporter.share(logViewWrapper.getText());
-        } else {
-            notifyUser.notifyShort(R.string.nothing_to_share);
-        }
-    }
-
-
-    private boolean hasSharableContent() {
-        final String startText = getString(R.string.greeting);
-        final String content = logViewWrapper.getText().toString();
-
-        return !startText.equals(content);
-    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT_ID);
         colorProvider = new ColorProvider(getResources(), getTheme());
+
+        view = new aws.apps.keyeventdisplay.ui.main.View(colorProvider);
+        view.bind(this);
+
+        view.setClearLogButtonListener(v -> view.clearLog());
+        view.setAppendBreakButtonListener(v -> view.appendBreakToLog());
+        view.setAboutButtonListener(v -> DialogFactory.createAboutDialog(this).show());
+        view.setExitButtonListener(v -> quitApp());
+        view.setShareLogButtonListener(v -> shareLog());
+        view.setSaveLogButtonListener(v -> saveLogToDisk());
+
         notifyUser = new NotifyUser(this);
         exporter = new Exporter(this, notifyUser);
 
-        chkKeyEvents = findViewById(R.id.chkKeyEvents);
-        chkKernel = findViewById(R.id.chkKernel);
-        chkLogcat = findViewById(R.id.chkLogCat);
-
-        if (fldLog == null) {
-            fldLog = findViewById(R.id.fldEvent);
-        }
-
-        logViewWrapper = new LogViewWrapper(fldLog, colorProvider);
-
         final String[] logCatFilter = getResources().getStringArray(R.array.logcat_filter);
         final String[] kernelFilter = getResources().getStringArray(R.array.kmsg_filter);
-        logCatM = new LogCatMonitor(logCatFilter);
-        kernelM = new KernelLogMonitor(kernelFilter);
+        logCatMonitor = new LogCatMonitor(logCatFilter);
+        kernelMonitor = new KernelLogMonitor(kernelFilter);
 
         final Object lastState = getLastNonConfigurationInstance();
         if (lastState != null) {
-            final ActivityState activityState = (ActivityState) lastState;
-
-            fldLog.setText(activityState.getLogText());
-            chkKernel.setChecked(activityState.isChkKernel());
-            chkKeyEvents.setChecked(activityState.isChkKeyEvents());
-            chkLogcat.setChecked(activityState.isChkLogcat());
-            logViewWrapper.autoScroll();
+            view.setState((ViewState) lastState);
         }
     }
 
@@ -157,19 +105,14 @@ public class MainActivity extends Activity {
 
     @Override
     public Object onRetainNonConfigurationInstance() {
-        final ActivityState state = new ActivityState();
-        state.setChkKernel(chkKernel.isChecked());
-        state.setChkLogcat(chkLogcat.isChecked());
-        state.setChkKeyEvents(chkKeyEvents.isChecked());
-        state.setLogText(logViewWrapper.getText());
-        return (state);
+        return view.getState();
     }
 
     @Override
     public void onStart() {
         Log.d(TAG, "^ onStart called");
 
-        logCatM.startMonitor(new MonitorCallback() {
+        logCatMonitor.startMonitor(new MonitorCallback() {
             @Override
             public void onError(final String msg, final Throwable e) {
                 runOnUiThread(() -> notifyUser.notifyLong("LogCatMonitor: " + msg + ": " + e));
@@ -181,7 +124,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        kernelM.startMonitor(new MonitorCallback() {
+        kernelMonitor.startMonitor(new MonitorCallback() {
             @Override
             public void onError(final String msg, final Throwable e) {
                 runOnUiThread(() -> notifyUser.notifyLong("KernelLogMonitor: " + msg + ": " + e));
@@ -199,28 +142,56 @@ public class MainActivity extends Activity {
     @Override
     public void onStop() {
         Log.d(TAG, "^ onStop called");
-        logCatM.stopMonitor();
-        kernelM.stopMonitor();
+        logCatMonitor.stopMonitor();
+        kernelMonitor.stopMonitor();
         super.onStop();
     }
 
-    public void addKernelLine(String text) {
-        if (chkKernel.isChecked()) {
-            logViewWrapper.appendLogLine(LOG_LINE_KERNEL, text, colorProvider.getColor(R.color.color_kernel));
+    private void addKernelLine(String text) {
+        if (view.isKernelChecked()) {
+            view.appendLogLine(LOG_LINE_KERNEL, text, colorProvider.getColor(R.color.color_kernel));
         }
     }
 
-    public void addLogCatLine(String text) {
-        if (chkLogcat.isChecked()) {
-            logViewWrapper.appendLogLine(LOG_LINE_LOGCAT, text, colorProvider.getColor(R.color.color_logcat));
+    private void addLogCatLine(String text) {
+        if (view.isLogcatChecked()) {
+            view.appendLogLine(LOG_LINE_LOGCAT, text, colorProvider.getColor(R.color.color_logcat));
         }
     }
 
-    public void addKeyEventLine(final String key,
-                                final KeyEvent event,
-                                @ColorRes final int colorId) {
-        if (chkKeyEvents.isChecked()) {
-            logViewWrapper.appendKeyEvent(key, event, colorProvider.getColor(colorId));
+    private void addKeyEventLine(final String key,
+                                 final KeyEvent event,
+                                 @ColorRes final int colorId) {
+        if (view.isKeyEventsChecked()) {
+            view.appendKeyEvent(key, event, colorProvider.getColor(colorId));
         }
+    }
+
+    private void quitApp() {
+        onStop();
+        System.exit(0);
+    }
+
+    private void saveLogToDisk() {
+        if (hasSharableContent()) {
+            exporter.save(view.getEventLogText());
+        } else {
+            notifyUser.notifyShort(R.string.nothing_to_save);
+        }
+    }
+
+    private void shareLog() {
+        if (hasSharableContent()) {
+            exporter.share(view.getEventLogText());
+        } else {
+            notifyUser.notifyShort(R.string.nothing_to_share);
+        }
+    }
+
+    private boolean hasSharableContent() {
+        final String startText = getString(R.string.greeting);
+        final String content = view.getEventLogText().toString();
+
+        return !startText.equals(content);
     }
 }
