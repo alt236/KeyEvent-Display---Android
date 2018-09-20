@@ -8,6 +8,7 @@ package aws.apps.keyeventdisplay.ui.main.export;
         append(sb, "Board: ", android.os.Build.BOARD, "\n");
         append(sb, "Brand: ", android.os.Build.BRAND, "\n");
         append(sb, "CPU_ABI: ", android.os.Build.CPU_ABI, "\n");
+        append(sb, "CPU_ABI2: ", android.os.Build.CPU_ABI2, "\n");
         append(sb, "Device: ", android.os.Build.DEVICE, "\n");
         append(sb, "Display: ", android.os.Build.DISPLAY, "\n");
         append(sb, "Fingerprint: ", android.os.Build.FINGERPRINT, "\n");
@@ -19,13 +20,9 @@ package aws.apps.keyeventdisplay.ui.main.export;
         append(sb, "Tags: ", android.os.Build.TAGS, "\n");
         append(sb, "Type: ", android.os.Build.TYPE, "\n");
         append(sb, "User: ", android.os.Build.USER, "\n");
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.FROYO) {
-            append(sb, "Bootloader: ", android.os.Build.BOOTLOADER, "\n");
-            append(sb, "CPU_ABI2: ", android.os.Build.CPU_ABI2, "\n");
-            append(sb, "Hardware: ", android.os.Build.HARDWARE, "\n");
-            append(sb, "Radio: ", android.os.Build.RADIO, "\n");
-        }
+        append(sb, "Bootloader: ", android.os.Build.BOOTLOADER, "\n");
+        append(sb, "Hardware: ", android.os.Build.HARDWARE, "\n");
+        append(sb, "Radio: ", android.os.Build.RADIO, "\n");
     }
 
     private static void append(final StringBuilder sb,

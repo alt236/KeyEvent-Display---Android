@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
 /*package*/ final class SpannableTextFormatHelper {
+
     private SpannableTextFormatHelper() {
         // INSTANTIATION BAD
     }

@@ -31,8 +31,8 @@ public class LogViewWrapper {
         line.append(" code=", event.getKeyCode());
         line.append(" repeat=", event.getRepeatCount());
         line.append(" meta=", event.getMetaState());
-        line.append(" scancode=", event.getScanCode());
-        line.append(" mFlags=", event.getFlags());
+        line.append(" scanCode=", event.getScanCode());
+        line.append(" flags=", event.getFlags());
         line.append(" label='", event.getDisplayLabel(), "'");
         line.append(" chars='", event.getCharacters(), "'");
         line.append(" number='", event.getNumber(), "'");

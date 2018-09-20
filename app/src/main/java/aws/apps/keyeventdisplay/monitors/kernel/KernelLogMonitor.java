@@ -13,27 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package aws.apps.keyeventdisplay.monitors;
+package aws.apps.keyeventdisplay.monitors.kernel;
 
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
-public class LogCatMonitor implements Monitor {
-    private static final String[] LOGCAT_CLEAR_CMD = new String[]{"logcat", "-c"};
-    private static final String[] LOGCAT_CMD = new String[]{"logcat"};
+import aws.apps.keyeventdisplay.monitors.ClosableHelper;
+import aws.apps.keyeventdisplay.monitors.Filter;
+import aws.apps.keyeventdisplay.monitors.Monitor;
+import aws.apps.keyeventdisplay.monitors.MonitorCallback;
+import aws.apps.keyeventdisplay.monitors.ProcessWrapper;
+
+public class KernelLogMonitor implements Monitor {
+    private static final String SU_CMD = "su";
+    private static final String KERNEL_LOG_CMD = "cat /proc/kmsg";
     private final Filter filter;
-    private LogCatMonitorRunnable runnable;
+    private KernelMonitorRunnable runnable;
 
-    public LogCatMonitor(String[] stringArray) {
+    public KernelLogMonitor(String[] stringArray) {
         filter = new Filter(stringArray);
     }
 
     @Override
     public void startMonitor(final MonitorCallback callback) {
-        runnable = new LogCatMonitorRunnable(callback, filter);
+        runnable = new KernelMonitorRunnable(callback, filter);
         new Thread(runnable).start();
     }
 
@@ -45,14 +53,15 @@ public class LogCatMonitor implements Monitor {
         }
     }
 
-    private static class LogCatMonitorRunnable implements Runnable {
+
+    private static class KernelMonitorRunnable implements Runnable {
         private final String TAG = this.getClass().getName();
         private final MonitorCallback callback;
         private final ProcessWrapper processWrapper;
         private final Filter filter;
         private boolean stopped;
 
-        private LogCatMonitorRunnable(final MonitorCallback callback,
+        private KernelMonitorRunnable(final MonitorCallback callback,
                                       final Filter filter) {
             this.callback = callback;
             this.filter = filter;
@@ -65,34 +74,41 @@ public class LogCatMonitor implements Monitor {
 
         @Override
         public void run() {
-            Log.d(TAG, "LogCatMonitor started...");
-            BufferedReader reader = null;
+            Log.d(TAG, "KernelLogMonitor started...");
             String line;
+            BufferedReader reader = null;
 
-            processWrapper.execute(LOGCAT_CLEAR_CMD);
-            final boolean procStartedOk = processWrapper.execute(LOGCAT_CMD);
-
+            final boolean procStartedOk = processWrapper.execute(SU_CMD);
             if (!procStartedOk) {
-                Log.e(TAG, "LogCatMonitor: Can't open log file. Exiting.");
+                Log.e(TAG, "KernelLogMonitor: Can't open log file. Exiting.");
             } else {
                 try {
-                    reader = new BufferedReader(new InputStreamReader(processWrapper.getInputStream()), BUFFER_SIZE);
+                    final DataInputStream is = new DataInputStream(processWrapper.getInputStream());
+                    final OutputStreamWriter os = new OutputStreamWriter(processWrapper.getOutputStream());
+
+                    os.write(KERNEL_LOG_CMD + "\n");
+                    os.flush();
+                    os.close();
+
+                    reader = new BufferedReader(new InputStreamReader(is), BUFFER_SIZE);
 
                     Log.d(TAG, "Pre loop!");
+
                     while ((line = reader.readLine()) != null && !stopped) {
-                        if (!line.contains(TAG) && filter.isValidLine(line)) {
+                        Log.d(TAG, "New line!");
+                        if (filter.isValidLine(line)) {
                             callback.onNewline(line);
                         }
                     }
+
                     Log.d(TAG, "Post loop!");
                 } catch (IOException e) {
-                    Log.e(TAG, "LogCatMonitor error: " + e.getMessage());
-                    callback.onError("Error reading from process " + LOGCAT_CMD[0], e);
+                    Log.e(TAG, "KernelLogMonitor error: " + e.getMessage());
+                    callback.onError("Error reading from process " + KERNEL_LOG_CMD, e);
                 } finally {
-                    Helper.close(reader);
+                    ClosableHelper.close(reader);
                 }
-
-                Log.w(TAG, "LogCatMonitor thread has exited...");
+                Log.d(TAG, "KernelLogMonitor has finished...");
             }
         }
     }

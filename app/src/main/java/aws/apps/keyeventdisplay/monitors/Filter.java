@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
-/*package*/ class Filter {
+public class Filter {
     private static final String TAG = Filter.class.getSimpleName();
 
     private final Set<String> filteredWords;
