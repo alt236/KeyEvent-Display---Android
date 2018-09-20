@@ -86,8 +86,8 @@ public class Exporter {
                 }
 
             } catch (Exception e) {
-                Log.e(TAG, "^ Could not write file. Error: " + e.getMessage());
-                notifyUser.notifyShort("Could not write file:\nError" + e.getMessage());
+                Log.e(TAG, "^ Could not write file. Error: " + e.getMessage(), e);
+                notifyUser.notifyShort("Could not write file:\nError: " + e.getMessage());
             }
 
         } else {

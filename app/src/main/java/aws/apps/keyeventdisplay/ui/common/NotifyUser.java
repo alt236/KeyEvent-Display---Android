@@ -1,6 +1,7 @@
 package aws.apps.keyeventdisplay.ui.common;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 public class NotifyUser {
@@ -14,7 +15,7 @@ public class NotifyUser {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
-    public void notifyLong(int stringResId) {
+    public void notifyLong(@StringRes int stringResId) {
         Toast.makeText(context, stringResId, Toast.LENGTH_LONG).show();
     }
 
@@ -22,7 +23,7 @@ public class NotifyUser {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
     }
 
-    public void notifyShort(int stringResId) {
+    public void notifyShort(@StringRes int stringResId) {
         Toast.makeText(context, stringResId, Toast.LENGTH_SHORT).show();
     }
 }

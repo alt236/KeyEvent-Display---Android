@@ -6,7 +6,7 @@
 		·Original icon by OCAL: http://www.clker.com/clipart-1914.html
 	</string>
 
-    <string name="app_copyright">Copyright A. Schillings, 2010</string>
+    <string name="app_copyright">Copyright A. Schillings, 2010–2018</string>
 	
 	<string name="app_changelog">
 		Changelog:\n
@@ -14,6 +14,7 @@
 		·v0.0.2 Improved stability, added Exit button.\n
 		·v0.0.3 Code updates.\n
 		·v0.0.4 Changed drawables, added sharing, added more info in export text.\n
+		·v0.0.4 UI Update, bumped APIs.\n
 	</string>
 
 	<string name="app_notes">

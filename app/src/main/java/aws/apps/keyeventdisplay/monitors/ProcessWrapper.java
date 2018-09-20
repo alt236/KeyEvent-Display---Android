@@ -7,12 +7,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-/*package*/ class ProcessWrapper {
+public class ProcessWrapper {
     private static final String TAG = ProcessWrapper.class.getSimpleName();
 
     private Process mProcess = null;
 
-    protected boolean execute(String command[]) {
+    public boolean execute(String command[]) {
         try {
             mProcess = Runtime.getRuntime().exec(command);
             return true;
@@ -23,7 +23,7 @@ import java.util.Arrays;
         }
     }
 
-    protected boolean execute(String command) {
+    public boolean execute(String command) {
         try {
             mProcess = Runtime.getRuntime().exec(command);
             return true;

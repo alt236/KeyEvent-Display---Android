@@ -25,9 +25,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import aws.apps.keyeventdisplay.R;
-import aws.apps.keyeventdisplay.monitors.KernelLogMonitor;
-import aws.apps.keyeventdisplay.monitors.LogCatMonitor;
 import aws.apps.keyeventdisplay.monitors.MonitorCallback;
+import aws.apps.keyeventdisplay.monitors.kernel.KernelLogMonitor;
+import aws.apps.keyeventdisplay.monitors.logcat.LogCatMonitor;
 import aws.apps.keyeventdisplay.ui.common.ColorProvider;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 import aws.apps.keyeventdisplay.ui.dialogs.DialogFactory;
@@ -35,7 +35,6 @@ import aws.apps.keyeventdisplay.ui.main.export.Exporter;
 import aws.apps.keyeventdisplay.ui.main.logview.LogViewWrapper;
 
 public class MainActivity extends Activity {
-
     public static final String LOG_LINE_KERNEL = "Kernel:       ";
     public static final String LOG_LINE_LOGCAT = "Logcat:       ";
     public static final String LOG_LINE_KEY_DOWN = "KeyDown:      ";
@@ -43,6 +42,9 @@ public class MainActivity extends Activity {
     public static final String LOG_LINE_KEY_MULTIPLE = "KeyMultiple: ";
     public static final String LOG_LINE_KEY_UP = "KeyUp:        ";
     private final static String TAG = MainActivity.class.getSimpleName();
+
+    private static final int LAYOUT_ID = R.layout.activity_main;
+
     private CheckBox chkKernel;
     private CheckBox chkKeyEvents;
     private CheckBox chkLogcat;
@@ -97,17 +99,17 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(LAYOUT_ID);
         colorProvider = new ColorProvider(getResources(), getTheme());
         notifyUser = new NotifyUser(this);
         exporter = new Exporter(this, notifyUser);
 
-        chkKeyEvents = (CheckBox) findViewById(R.id.chkKeyEvents);
-        chkKernel = (CheckBox) findViewById(R.id.chkKernel);
-        chkLogcat = (CheckBox) findViewById(R.id.chkLogCat);
+        chkKeyEvents = findViewById(R.id.chkKeyEvents);
+        chkKernel = findViewById(R.id.chkKernel);
+        chkLogcat = findViewById(R.id.chkLogCat);
 
         if (fldLog == null) {
-            fldLog = (TextView) findViewById(R.id.fldEvent);
+            fldLog = findViewById(R.id.fldEvent);
         }
 
         logViewWrapper = new LogViewWrapper(fldLog, colorProvider);
@@ -170,11 +172,7 @@ public class MainActivity extends Activity {
         logCatM.startMonitor(new MonitorCallback() {
             @Override
             public void onError(final String msg, final Throwable e) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        notifyUser.notifyLong("LogCatMonitor: " + msg + ": " + e);
-                    }
-                });
+                runOnUiThread(() -> notifyUser.notifyLong("LogCatMonitor: " + msg + ": " + e));
             }
 
             @Override
@@ -186,11 +184,7 @@ public class MainActivity extends Activity {
         kernelM.startMonitor(new MonitorCallback() {
             @Override
             public void onError(final String msg, final Throwable e) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        notifyUser.notifyLong("KernelLogMonitor: " + msg + ": " + e);
-                    }
-                });
+                runOnUiThread(() -> notifyUser.notifyLong("KernelLogMonitor: " + msg + ": " + e));
             }
 
             @Override
