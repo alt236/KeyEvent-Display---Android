@@ -25,10 +25,12 @@ public class Exporter {
 
     private final Activity activity;
     private final NotifyUser notifyUser;
+    private final DeviceInfo deviceInfo;
 
     public Exporter(final Activity activity, NotifyUser notifyUser) {
         this.activity = activity;
         this.notifyUser = notifyUser;
+        this.deviceInfo = new DeviceInfo(activity.getApplicationContext());
     }
 
     public void save(CharSequence text) {
@@ -58,7 +60,7 @@ public class Exporter {
 
     private String getExportText(final CharSequence text) {
         final StringBuilder sb = new StringBuilder();
-        DeviceInfo.collectDeviceInfo(sb);
+        deviceInfo.collectDeviceInfo(sb);
         sb.append("\n\n-----------------\n\n");
         sb.append(text);
         return sb.toString();
