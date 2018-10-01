@@ -68,10 +68,9 @@ public class Exporter {
 
     private void saveToFile(String fileName, File directory, String contents) {
         Log.d(TAG, "^ saveToFile: attempting to save at '" + directory.getAbsolutePath() + "/" + fileName + "'");
-        if (android.os.Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED)) {
-            try {
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
 
+            try {
                 if (directory.canWrite()) {
                     final File gpxfile = new File(directory, fileName);
                     final FileWriter gpxwriter = new FileWriter(gpxfile);
@@ -84,7 +83,7 @@ public class Exporter {
                     Log.d(TAG, "^ saveToFile: saved as '" + pathAsString + "'");
                     notifyUser.notifyShort("Saved to SD as '" + pathAsString + "'");
                 } else {
-                    throw new Exception();
+                    throw new IllegalStateException("Cannot write to directory: " + directory);
                 }
 
             } catch (Exception e) {

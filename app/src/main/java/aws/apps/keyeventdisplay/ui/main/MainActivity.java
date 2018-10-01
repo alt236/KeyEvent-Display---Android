@@ -30,6 +30,7 @@ import aws.apps.keyeventdisplay.ui.common.ColorProvider;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 import aws.apps.keyeventdisplay.ui.dialogs.DialogFactory;
 import aws.apps.keyeventdisplay.ui.main.export.Exporter;
+import aws.apps.keyeventdisplay.ui.main.export.WriteToDiskDelegate;
 
 public class MainActivity extends Activity {
     public static final String LOG_LINE_KERNEL = "Kernel:       ";
@@ -42,6 +43,7 @@ public class MainActivity extends Activity {
 
     private static final int LAYOUT_ID = R.layout.activity_main;
 
+    private WriteToDiskDelegate writeToDiskDelegate;
     private Monitor logCatMonitor;
     private Monitor kernelMonitor;
     private NotifyUser notifyUser;
@@ -67,6 +69,7 @@ public class MainActivity extends Activity {
 
         notifyUser = new NotifyUser(this);
         exporter = new Exporter(this, notifyUser);
+        writeToDiskDelegate = new WriteToDiskDelegate(this, exporter, notifyUser);
 
         final String[] logCatFilter = getResources().getStringArray(R.array.logcat_filter);
         final String[] kernelFilter = getResources().getStringArray(R.array.kmsg_filter);
@@ -173,25 +176,32 @@ public class MainActivity extends Activity {
     }
 
     private void saveLogToDisk() {
-        if (hasSharableContent()) {
-            exporter.save(view.getEventLogText());
+        final String text = view.getEventLogText().toString();
+        final boolean isSharable = isSharable(text);
+
+        if (isSharable) {
+            writeToDiskDelegate.saveLogToDisk(text);
         } else {
             notifyUser.notifyShort(R.string.nothing_to_save);
         }
     }
 
     private void shareLog() {
-        if (hasSharableContent()) {
-            exporter.share(view.getEventLogText());
+        final String text = view.getEventLogText().toString();
+        final boolean isSharable = isSharable(text);
+
+        if (isSharable) {
+            exporter.share(text);
         } else {
             notifyUser.notifyShort(R.string.nothing_to_share);
         }
     }
 
-    private boolean hasSharableContent() {
+    private boolean isSharable(final String content) {
         final String startText = getString(R.string.greeting);
-        final String content = view.getEventLogText().toString();
 
-        return !startText.equals(content);
+        return content != null
+                && !content.isEmpty()
+                && !startText.equals(content);
     }
 }
