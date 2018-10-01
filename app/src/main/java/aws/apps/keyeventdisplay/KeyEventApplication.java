@@ -22,8 +22,7 @@ public class KeyEventApplication extends Application {
 
             final StrictMode.VmPolicy.Builder vmPolicyBuilder = new StrictMode.VmPolicy.Builder()
                     .detectAll()
-                    .penaltyLog()
-                    .penaltyDeath();
+                    .penaltyLog();
 
             StrictMode.setVmPolicy(vmPolicyBuilder.build());
         }
