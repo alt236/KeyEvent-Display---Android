@@ -15,9 +15,8 @@
  ******************************************************************************/
 package aws.apps.keyeventdisplay.ui.main;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -27,18 +26,12 @@ import aws.apps.keyeventdisplay.monitors.MonitorCallback;
 import aws.apps.keyeventdisplay.monitors.kernel.KernelLogMonitor;
 import aws.apps.keyeventdisplay.monitors.logcat.LogCatMonitor;
 import aws.apps.keyeventdisplay.ui.common.ColorProvider;
+import aws.apps.keyeventdisplay.ui.common.DialogFactory;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
-import aws.apps.keyeventdisplay.ui.dialogs.DialogFactory;
 import aws.apps.keyeventdisplay.ui.main.export.Exporter;
 import aws.apps.keyeventdisplay.ui.main.export.WriteToDiskDelegate;
 
-public class MainActivity extends Activity {
-    public static final String LOG_LINE_KERNEL = "Kernel:       ";
-    public static final String LOG_LINE_LOGCAT = "Logcat:       ";
-    public static final String LOG_LINE_KEY_DOWN = "KeyDown:      ";
-    public static final String LOG_LINE_KEY_LONG_PRESS = "KeyLongPress: ";
-    public static final String LOG_LINE_KEY_MULTIPLE = "KeyMultiple: ";
-    public static final String LOG_LINE_KEY_UP = "KeyUp:        ";
+public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private static final int LAYOUT_ID = R.layout.activity_main;
@@ -48,21 +41,26 @@ public class MainActivity extends Activity {
     private Monitor kernelMonitor;
     private NotifyUser notifyUser;
     private Exporter exporter;
-    private ColorProvider colorProvider;
     private aws.apps.keyeventdisplay.ui.main.View view;
+    private LineMarkupFactory markupFactory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Starting: " + this.getClass().getName());
+
         setContentView(LAYOUT_ID);
-        colorProvider = new ColorProvider(getResources(), getTheme());
+
+        final ColorProvider colorProvider = new ColorProvider(getResources(), getTheme());
+
+        markupFactory = new LineMarkupFactory(colorProvider);
 
         view = new aws.apps.keyeventdisplay.ui.main.View(colorProvider);
         view.bind(this);
 
         view.setClearLogButtonListener(v -> view.clearLog());
         view.setAppendBreakButtonListener(v -> view.appendBreakToLog());
-        view.setAboutButtonListener(v -> DialogFactory.createAboutDialog(this).show());
+        view.setAboutButtonListener(v -> showAboutDialog());
         view.setExitButtonListener(v -> quitApp());
         view.setShareLogButtonListener(v -> shareLog());
         view.setSaveLogButtonListener(v -> saveLogToDisk());
@@ -76,7 +74,7 @@ public class MainActivity extends Activity {
         logCatMonitor = new LogCatMonitor(logCatFilter);
         kernelMonitor = new KernelLogMonitor(kernelFilter);
 
-        final Object lastState = getLastNonConfigurationInstance();
+        final Object lastState = getLastCustomNonConfigurationInstance();
         if (lastState != null) {
             view.setState((ViewState) lastState);
         }
@@ -84,30 +82,34 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        addKeyEventLine(LOG_LINE_KEY_DOWN, event, R.color.color_keydown);
+        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyDown();
+        addKeyEventLine(markup, event);
         return true;
     }
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        addKeyEventLine(LOG_LINE_KEY_LONG_PRESS, event, R.color.color_keylongpress);
+        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyLongPress();
+        addKeyEventLine(markup, event);
         return true;
     }
 
     @Override
     public boolean onKeyMultiple(int keyCode, int count, KeyEvent event) {
-        addKeyEventLine(LOG_LINE_KEY_MULTIPLE, event, R.color.color_keymultiple);
+        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyMultiple();
+        addKeyEventLine(markup, event);
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        addKeyEventLine(LOG_LINE_KEY_UP, event, R.color.color_keyup);
+        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyUp();
+        addKeyEventLine(markup, event);
         return true;
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
+    public Object onRetainCustomNonConfigurationInstance() {
         return view.getState();
     }
 
@@ -152,27 +154,32 @@ public class MainActivity extends Activity {
 
     private void addKernelLine(String text) {
         if (view.isKernelChecked()) {
-            view.appendLogLine(LOG_LINE_KERNEL, text, colorProvider.getColor(R.color.color_kernel));
+            final LineMarkupFactory.LineMarkup markup = markupFactory.getForKernel();
+            view.appendLogLine(markup.getTag(), text, markup.getColour());
         }
     }
 
     private void addLogCatLine(String text) {
         if (view.isLogcatChecked()) {
-            view.appendLogLine(LOG_LINE_LOGCAT, text, colorProvider.getColor(R.color.color_logcat));
+            final LineMarkupFactory.LineMarkup markup = markupFactory.getForLogcat();
+            view.appendLogLine(markup.getTag(), text, markup.getColour());
         }
     }
 
-    private void addKeyEventLine(final String key,
-                                 final KeyEvent event,
-                                 @ColorRes final int colorId) {
+    private void addKeyEventLine(final LineMarkupFactory.LineMarkup markup,
+                                 final KeyEvent event) {
         if (view.isKeyEventsChecked()) {
-            view.appendKeyEvent(key, event, colorProvider.getColor(colorId));
+            view.appendKeyEvent(markup.getTag(), event, markup.getColour());
         }
     }
 
     private void quitApp() {
         onStop();
         System.exit(0);
+    }
+
+    private void showAboutDialog() {
+        DialogFactory.createAboutDialog(this).show(getSupportFragmentManager(), "ALERT_DIALOG");
     }
 
     private void saveLogToDisk() {
