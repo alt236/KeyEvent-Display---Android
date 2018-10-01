@@ -63,7 +63,7 @@ public class LogViewWrapper {
     }
 
     public void appendBreak() {
-        textView.append(breakLine);
+        append(breakLine);
     }
 
     public CharSequence getText() {
