@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private Exporter exporter;
     private aws.apps.keyeventdisplay.ui.main.View view;
     private LineMarkupFactory markupFactory;
+    private KeyEventConsumptionChecker keyEventConsumptionChecker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         final ColorProvider colorProvider = new ColorProvider(getResources(), getTheme());
 
         markupFactory = new LineMarkupFactory(colorProvider);
+        keyEventConsumptionChecker = new KeyEventConsumptionChecker();
 
         view = new aws.apps.keyeventdisplay.ui.main.View(colorProvider);
         view.bind(this);
@@ -84,28 +86,28 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyDown();
         addKeyEventLine(markup, event);
-        return true;
+        return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyLongPress();
         addKeyEventLine(markup, event);
-        return true;
+        return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
 
     @Override
     public boolean onKeyMultiple(int keyCode, int count, KeyEvent event) {
         final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyMultiple();
         addKeyEventLine(markup, event);
-        return true;
+        return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyUp();
         addKeyEventLine(markup, event);
-        return true;
+        return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
 
     @Override
