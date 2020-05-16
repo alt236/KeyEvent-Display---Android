@@ -1,17 +1,18 @@
 apply plugin: 'com.android.library'
-
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-}
+apply from: "${project.rootDir}/buildsystem/android-defaults.gradle"
 
 android {
-    compileSdkVersion 28
+    final int buildNumber = getBuildNumber()
+    final int versionMajor = 1
+    final int versionMinor = 0
+    final int versionPatch = buildNumber
+    final int androidVersionCode = buildNumber
+
+    final String semanticVersion = "${versionMajor}.${versionMinor}.${versionPatch}"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
+        versionCode androidVersionCode
+        versionName semanticVersion
     }
 
     buildTypes {
@@ -24,4 +25,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+dependencies {
+    implementation "com.karumi:dexter:$dexter_version"
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
+    implementation "androidx.annotation:annotation:$androidx_annotation_version"
+
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
 }

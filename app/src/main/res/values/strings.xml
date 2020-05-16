@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">KeyEvent Display</string>
 	<string name="app_acknowledgements">
 		Acknowledgements:\n
 		·Original icon by OCAL: http://www.clker.com/clipart-1914.html
