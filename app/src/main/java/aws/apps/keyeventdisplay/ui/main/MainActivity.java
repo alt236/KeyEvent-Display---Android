@@ -21,15 +21,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import aws.apps.keyeventdisplay.R;
-import aws.apps.keyeventdisplay.monitors.Monitor;
-import aws.apps.keyeventdisplay.monitors.MonitorCallback;
-import aws.apps.keyeventdisplay.monitors.kernel.KernelLogMonitor;
-import aws.apps.keyeventdisplay.monitors.logcat.LogCatMonitor;
 import aws.apps.keyeventdisplay.ui.common.ColorProvider;
 import aws.apps.keyeventdisplay.ui.common.DialogFactory;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 import aws.apps.keyeventdisplay.ui.main.export.Exporter;
 import aws.apps.keyeventdisplay.ui.main.export.WriteToDiskDelegate;
+import uk.co.alt236.keyeventdisplay.monitors.Monitor;
+import uk.co.alt236.keyeventdisplay.monitors.MonitorCallback;
+import uk.co.alt236.keyeventdisplay.monitors.kernel.KernelLogMonitor;
+import uk.co.alt236.keyeventdisplay.monitors.logcat.LogCatMonitor;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package aws.apps.keyeventdisplay.monitors.logcat;
+package uk.co.alt236.keyeventdisplay.monitors.logcat;
 
 import android.util.Log;
 
@@ -21,11 +21,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import aws.apps.keyeventdisplay.monitors.ClosableHelper;
-import aws.apps.keyeventdisplay.monitors.Filter;
-import aws.apps.keyeventdisplay.monitors.Monitor;
-import aws.apps.keyeventdisplay.monitors.MonitorCallback;
-import aws.apps.keyeventdisplay.monitors.ProcessWrapper;
+import uk.co.alt236.keyeventdisplay.monitors.Filter;
+import uk.co.alt236.keyeventdisplay.monitors.Monitor;
+import uk.co.alt236.keyeventdisplay.monitors.MonitorCallback;
+import uk.co.alt236.keyeventdisplay.monitors.util.ClosableHelper;
+import uk.co.alt236.keyeventdisplay.monitors.util.ProcessWrapper;
 
 public class LogCatMonitor implements Monitor {
     private static final String[] LOGCAT_CLEAR_CMD = new String[]{"logcat", "-c"};
