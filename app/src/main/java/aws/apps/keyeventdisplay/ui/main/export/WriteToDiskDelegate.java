@@ -11,6 +11,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import aws.apps.keyeventdisplay.R;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 
 public class WriteToDiskDelegate {
@@ -29,7 +30,7 @@ public class WriteToDiskDelegate {
     }
 
     public void saveLogToDisk(final String text) {
-        Dexter.withActivity(activity)
+        Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
@@ -40,13 +41,13 @@ public class WriteToDiskDelegate {
 
                     @Override
                     public void onPermissionDenied(final PermissionDeniedResponse response) {
-                        notifyUser.notifyLong("Unable to save the log to disk unless permission is granted!");
+                        notifyUser.notifyLong(R.string.toast_unable_to_save_log_to_disk);
                         Log.e(TAG, "onPermissionDenied(" + response.getPermissionName() + ")");
                     }
 
                     @Override
                     public void onPermissionRationaleShouldBeShown(final PermissionRequest permission, final PermissionToken token) {
-                        notifyUser.notifyLong("Unable to save the log to disk unless permission is granted!");
+                        notifyUser.notifyLong(R.string.toast_unable_to_save_log_to_disk);
                         Log.w(TAG, "onPermissionRationaleShouldBeShown(" + permission.getName() + ")");
                         token.continuePermissionRequest();
                     }

@@ -1,8 +1,8 @@
 package aws.apps.keyeventdisplay.ui.common;
 
 import android.content.Context;
-import android.support.v4.app.DialogFragment;
 
+import androidx.fragment.app.DialogFragment;
 import aws.apps.keyeventdisplay.BuildConfig;
 import aws.apps.keyeventdisplay.R;
 

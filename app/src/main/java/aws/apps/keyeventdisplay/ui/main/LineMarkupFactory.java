@@ -1,11 +1,10 @@
 package aws.apps.keyeventdisplay.ui.main;
 
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import aws.apps.keyeventdisplay.R;
 import aws.apps.keyeventdisplay.ui.common.ColorProvider;
 

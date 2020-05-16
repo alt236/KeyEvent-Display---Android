@@ -16,10 +16,10 @@
 package aws.apps.keyeventdisplay.ui.main;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import androidx.appcompat.app.AppCompatActivity;
 import aws.apps.keyeventdisplay.R;
 import aws.apps.keyeventdisplay.ui.common.ColorProvider;
 import aws.apps.keyeventdisplay.ui.common.DialogFactory;
