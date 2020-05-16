@@ -39,5 +39,6 @@
     <string name="share_result_via">Share using:</string>
 	<string name="nothing_to_share">Nothing to share…</string>
 	<string name="nothing_to_save">Nothing to save…</string>
+	<string name="toast_unable_to_save_log_to_disk">Unable to save the log to disk unless permission is granted!</string>
 
 </resources>

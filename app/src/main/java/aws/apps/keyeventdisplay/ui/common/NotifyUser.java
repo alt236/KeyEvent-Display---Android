@@ -1,8 +1,9 @@
 package aws.apps.keyeventdisplay.ui.common;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
 
 public class NotifyUser {
     private final Context context;

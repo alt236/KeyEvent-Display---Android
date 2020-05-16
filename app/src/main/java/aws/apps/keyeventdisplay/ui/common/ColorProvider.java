@@ -1,9 +1,10 @@
 package aws.apps.keyeventdisplay.ui.common;
 
 import android.content.res.Resources;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.v4.content.res.ResourcesCompat;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.core.content.res.ResourcesCompat;
 
 public class ColorProvider {
     private final Resources resources;

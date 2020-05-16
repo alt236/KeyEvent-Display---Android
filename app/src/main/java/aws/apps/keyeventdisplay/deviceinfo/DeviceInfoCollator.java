@@ -2,10 +2,11 @@ package aws.apps.keyeventdisplay.deviceinfo;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 public class DeviceInfoCollator {
     private final DeviceCapabilities deviceCapabilities;
