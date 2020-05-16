@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package aws.apps.keyeventdisplay.monitors;
+package uk.co.alt236.keyeventdisplay.monitors;
 
-@SuppressWarnings("WeakerAccess")
 public interface Monitor {
     int BUFFER_SIZE = 1024;
 

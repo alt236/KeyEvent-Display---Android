@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/keyevent-display.iml" filepath="$PROJECT_DIR$/keyevent-display.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="keyevent-display/app" />
+      <module fileurl="file://$PROJECT_DIR$/keyevent-display.iml" filepath="$PROJECT_DIR$/keyevent-display.iml" group="keyevent-display" />
+      <module fileurl="file://$PROJECT_DIR$/monitors/keyevent-display-monitors.iml" filepath="$PROJECT_DIR$/monitors/keyevent-display-monitors.iml" group="keyevent-display/monitors" />
+      <module fileurl="file://$PROJECT_DIR$/monitors/monitors.iml" filepath="$PROJECT_DIR$/monitors/monitors.iml" group="keyevent-display/monitors" />
     </modules>
   </component>
 </project>

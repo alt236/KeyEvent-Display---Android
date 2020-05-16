@@ -1,4 +1,4 @@
-package aws.apps.keyeventdisplay.monitors;
+package uk.co.alt236.keyeventdisplay.monitors;
 
 import android.util.Log;
 
