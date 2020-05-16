@@ -302,3 +302,4 @@ Thumbs.db
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.gitignore.io/api/java,kotlin,android,intellij+iml,androidstudio
+!/buildsystem/**/*.jar
