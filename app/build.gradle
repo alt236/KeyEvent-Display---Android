@@ -1,4 +1,8 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'com.github.triplet.play' version '2.5.0'
+}
+
 apply from: "${project.rootDir}/buildsystem/android-defaults.gradle"
 
 android {
@@ -70,4 +74,24 @@ dependencies {
 
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
+}
+
+play {
+    def credentialsPath = System.getenv("GPLAY_DEPLOY_KEY") ?: "[KEY_NOT_DEFINED]"
+    def lastCommitMessage = getLastGitCommitMessage().take(50)
+
+    logger.warn("GPP Config: $credentialsPath")
+    logger.warn("Release Name: '$lastCommitMessage'")
+
+    if(isRunningOnCi()) {
+        enabled = true
+        track = "internal"
+        //userFraction = 1.0
+        releaseStatus = "completed"
+        serviceAccountCredentials = file(credentialsPath)
+        releaseName = lastCommitMessage
+        artifactDir = file("${project.rootDir}/app/build/outputs/apk/release/")
+    } else {
+        enabled = false
+    }
 }
