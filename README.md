@@ -53,6 +53,7 @@ Changelog
 * v0.0.1: First public release.
 * v0.0.2: Improved stability, added Exit button.
 * v0.0.3: Code updates. 
+* v1.0.0: Redesign, added Android TV support. 
 
 Links
 -------

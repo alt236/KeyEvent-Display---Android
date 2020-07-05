@@ -26,6 +26,8 @@ import aws.apps.keyeventdisplay.ui.common.DialogFactory;
 import aws.apps.keyeventdisplay.ui.common.NotifyUser;
 import aws.apps.keyeventdisplay.ui.main.export.Exporter;
 import aws.apps.keyeventdisplay.ui.main.export.WriteToDiskDelegate;
+import aws.apps.keyeventdisplay.ui.main.markup.LineMarkup;
+import aws.apps.keyeventdisplay.ui.main.markup.LineMarkupFactory;
 import uk.co.alt236.keyeventdisplay.monitors.Monitor;
 import uk.co.alt236.keyeventdisplay.monitors.MonitorCallback;
 import uk.co.alt236.keyeventdisplay.monitors.kernel.KernelLogMonitor;
@@ -84,28 +86,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyDown();
+        final LineMarkup markup = markupFactory.getForKeyDown();
         addKeyEventLine(markup, event);
         return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyLongPress();
+        final LineMarkup markup = markupFactory.getForKeyLongPress();
         addKeyEventLine(markup, event);
         return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
 
     @Override
     public boolean onKeyMultiple(int keyCode, int count, KeyEvent event) {
-        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyMultiple();
+        final LineMarkup markup = markupFactory.getForKeyMultiple();
         addKeyEventLine(markup, event);
         return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        final LineMarkupFactory.LineMarkup markup = markupFactory.getForKeyUp();
+        final LineMarkup markup = markupFactory.getForKeyUp();
         addKeyEventLine(markup, event);
         return keyEventConsumptionChecker.shouldConsumeEvent(event);
     }
@@ -156,19 +158,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void addKernelLine(String text) {
         if (view.isKernelChecked()) {
-            final LineMarkupFactory.LineMarkup markup = markupFactory.getForKernel();
+            final LineMarkup markup = markupFactory.getForKernel();
             view.appendLogLine(markup.getTag(), text, markup.getColour());
         }
     }
 
     private void addLogCatLine(String text) {
         if (view.isLogcatChecked()) {
-            final LineMarkupFactory.LineMarkup markup = markupFactory.getForLogcat();
+            final LineMarkup markup = markupFactory.getForLogcat();
             view.appendLogLine(markup.getTag(), text, markup.getColour());
         }
     }
 
-    private void addKeyEventLine(final LineMarkupFactory.LineMarkup markup,
+    private void addKeyEventLine(final LineMarkup markup,
                                  final KeyEvent event) {
         if (view.isKeyEventsChecked()) {
             view.appendKeyEvent(markup.getTag(), event, markup.getColour());
