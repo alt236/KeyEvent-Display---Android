@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNewline(String line) {
-                addLogCatLine(line);
+                runOnUiThread(() -> addLogCatLine(line));
             }
         });
 
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNewline(String line) {
-                addKernelLine(line);
+                runOnUiThread(() -> addKernelLine(line));
             }
 
         });
