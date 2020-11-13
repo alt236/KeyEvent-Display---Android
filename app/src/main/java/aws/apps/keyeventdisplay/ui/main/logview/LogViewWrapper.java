@@ -37,6 +37,7 @@ public class LogViewWrapper {
         line.append(" chars='", event.getCharacters(), "'");
         line.append(" number='", event.getNumber(), "'");
         line.append(" deviceId='", event.getDeviceId(), "'");
+        line.append(" source='", event.getSource(), "'");
         line.append("\n");
 
         append(line.getCharSequence());
